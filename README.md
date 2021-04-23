@@ -32,3 +32,4 @@ Client --> Server:  Encode Packet
 Server ->> Client : Handle Packet
 Server --> LoginServer : extends
 Server --> GameServer : extends
+```
