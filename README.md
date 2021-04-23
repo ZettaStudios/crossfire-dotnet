@@ -23,13 +23,4 @@ Below is the data to perform the authentication.
 
 **A small sketch of the server's network.**
 
-```mermaid
-sequenceDiagram
-Client ->> Server : Connect
-Client ->> Server : Send Packet
-Server --> Client :  Decode Packet
-Client --> Server:  Encode Packet
-Server ->> Client : Handle Packet
-Server --> LoginServer : extends
-Server --> GameServer : extends
-```
+![Diagram](diagram.png)
