@@ -16,10 +16,10 @@ namespace crossfire_server.network
             return null;
         }
 
-        public void RegisterPacket<DPacket>(short id) where DPacket : DataPacket
+        public void RegisterPacket<TDPacket>(short id) where TDPacket : DataPacket
         {
             
-            Type dType = typeof(DPacket);
+            Type dType = typeof(TDPacket);
             if (!PacketPool.ContainsKey(id))
             {
                 PacketPool.TryAdd(id, dType);

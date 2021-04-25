@@ -14,7 +14,7 @@ namespace crossfire_server.server
     {
         protected string name = "Base Server";
         protected string token = "Zetta@123";
-        protected string address = "0.0.0.0";
+        protected string address = "192.168.0.114";
         protected short port = 13008;
         protected Thread thread;
         protected ArrayList sessions = new ArrayList();

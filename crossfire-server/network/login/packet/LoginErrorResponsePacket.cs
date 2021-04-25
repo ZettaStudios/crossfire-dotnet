@@ -19,12 +19,6 @@ namespace crossfire_server.network.login.packet
         {
             
         }
-        // IN        x  y  z       ER 
-        // f1 7b 1e 00 01 00 00 00 04 00
-        // F1 7B 1E 00 01 00 00 00 04 00
-        // F1 7B 1E 00 01 00 00 00 02 00
-        
-        // f1 a0 1f 00 01 00 00 00 04 00
         public override void Encode()
         {
             byte[] tmp = new byte[1445];
@@ -37,9 +31,9 @@ namespace crossfire_server.network.login.packet
             buffer[1] = 160;
             buffer[2] = 31;
             
-            buffer[3] = 0; // x
-            buffer[4] = 1; // y
-            buffer[5] = 0; // z
+            buffer[3] = 0;
+            buffer[4] = 1;
+            buffer[5] = 0;
             
             buffer[0] = StartsWith;
             buffer[buffer.Length - 1] = 0;
