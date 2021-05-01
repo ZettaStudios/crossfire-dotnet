@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using crossfire_server.network;
 using crossfire_server.session;
 using crossfire_server.util;
+using crossfire_server.util.log.Factories;
 
 namespace crossfire_server.server
 {
@@ -14,7 +15,7 @@ namespace crossfire_server.server
     {
         protected string name = "Base Server";
         protected string token = "Zetta@123";
-        protected string address = "192.168.0.114";
+        protected string address = "127.0.0.1";
         protected short port = 13008;
         protected Thread thread;
         protected ArrayList sessions = new ArrayList();
@@ -69,7 +70,7 @@ namespace crossfire_server.server
         }
         
         public void Log(string message) {
-            Console.Log($"[{name}] {message}");
+            LogFactory.GetLog("Main").LogInfo($"[{name}] {message}");
         }
 
         public string Name

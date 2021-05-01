@@ -4,7 +4,8 @@ using crossfire_server.enums;
 using crossfire_server.network.login.packet;
 using crossfire_server.server;
 using crossfire_server.util;
-using Console = crossfire_server.util.Console;
+using crossfire_server.util.log.Factories;
+//using Console = crossfire_server.util.Console;
 using DataPacket = crossfire_server.network.DataPacket;
 
 namespace crossfire_server.session
@@ -24,7 +25,7 @@ namespace crossfire_server.session
                 if (packet.IsValid)
                 {
                     server.Log($"Received Packet [{packet.Pid().ToString()}] [{buffer.Length}]");
-                    Console.Log(NetworkUtil.DumpPacket(buffer));
+                    LogFactory.GetLog("Main").LogInfo(NetworkUtil.DumpPacket(buffer));
                     packet.Decode();
                     HandlePacket(packet);
                 }

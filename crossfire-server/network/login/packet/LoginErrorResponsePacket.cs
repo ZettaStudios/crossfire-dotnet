@@ -1,5 +1,6 @@
 ﻿using crossfire_server.enums;
 using crossfire_server.util;
+using crossfire_server.util.log.Factories;
 
 namespace crossfire_server.network.login.packet
 {
@@ -42,9 +43,9 @@ namespace crossfire_server.network.login.packet
 
         public void Debug()
         {
-            Console.Log($"[Login Server] [{LoginType.S2CDisplayError.ToString()}]");
-            Console.Log($"{NetworkUtil.DumpPacket(buffer)}");
-            Console.Log("----- PACKET END -----");
+            LogFactory.GetLog("Main").LogSuccess($"[Login Server] [{LoginType.S2CDisplayError.ToString()}]");
+            LogFactory.GetLog("Main").LogSuccess($"{NetworkUtil.DumpPacket(buffer)}");
+            LogFactory.GetLog("Main").LogSuccess("----- PACKET END -----");
         }
     }
 }

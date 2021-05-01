@@ -1,5 +1,6 @@
 ﻿using crossfire_server.enums;
 using crossfire_server.util;
+using crossfire_server.util.log.Factories;
 
 namespace crossfire_server.network.login.packet
 {
@@ -38,11 +39,11 @@ namespace crossfire_server.network.login.packet
 
         public void Debug()
         {
-            Console.Log("Username: " + Username);
-            Console.Log("Password: " + Password);
-            Console.Log("Arguments: " + Arguments);
-            Console.Log("MacAddress: " + MacAddress);
-            Console.Log("Identifier: " + Identifier);
+            LogFactory.GetLog("Main").LogInfo("Username: " + Username);
+            LogFactory.GetLog("Main").LogInfo("Password: " + Password);
+            LogFactory.GetLog("Main").LogInfo("Arguments: " + Arguments);
+            LogFactory.GetLog("Main").LogInfo("MacAddress: " + MacAddress);
+            LogFactory.GetLog("Main").LogInfo("Identifier: " + Identifier);
         }
     }
 }

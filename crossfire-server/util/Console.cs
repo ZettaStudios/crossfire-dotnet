@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace crossfire_server.util
-{
+{ /*
     public class Console
     {
         public static void Log(string information)
@@ -20,5 +20,5 @@ namespace crossfire_server.util
                     UnicodeFormatter.byteToHex(array[k]));
             }
         }
-    }
+    } */
 }
