@@ -4,7 +4,7 @@ namespace crossfire_server.network.login.packet
 {
     public class LoginResponsePacket : network.DataPacket
     {
-        public const short NetworkId = (short) LoginType.S2CValidAccount;
+        public new const short NetworkId = (short) LoginType.S2CValidAccount;
         public override short Pid()
         {
             return NetworkId;

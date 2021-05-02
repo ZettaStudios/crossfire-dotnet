@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using crossfire_server.network;
 using crossfire_server.session;
 using crossfire_server.util;
+using crossfire_server.util.log.Factories;
 
 namespace crossfire_server.server
 {
@@ -14,7 +15,7 @@ namespace crossfire_server.server
     {
         protected string name = "Base Server";
         protected string token = "Zetta@123";
-        protected string address = "192.168.0.114";
+        protected string address = "127.0.0.1";
         protected short port = 13008;
         protected Thread thread;
         protected ArrayList sessions = new ArrayList();
@@ -32,17 +33,17 @@ namespace crossfire_server.server
             thread = new Thread(() =>
             {
                 Thread.CurrentThread.Name = name;
-                Log("Loading...");
+                LogFactory.GetLog("Main").LogInfo("Loading...");
                 try {
                     IPAddress ipAddress = IPAddress.Parse(address);
                     TcpListener server = new TcpListener(ipAddress, port);
                     server.Start();
-                    Log($"Listening at {ipAddress}:{port}.");
+                    LogFactory.GetLog("Main").LogInfo($"Listening at {ipAddress}:{port}.");
                     while (true) {
                         onRun(server.AcceptTcpClient());
                     }
                 } catch (IOException e) {
-                    Log(e.StackTrace);
+                    LogFactory.GetLog("Main").LogFatal(e);
                 }
             });
             thread.Start();
@@ -50,13 +51,13 @@ namespace crossfire_server.server
 
         public void Stop()
         {
-            Log($"STOP RECEIVED, CLOSING ALL SESSIONS [{sessions.Count}].");
+            LogFactory.GetLog("Main").LogWarning($"STOP RECEIVED, CLOSING ALL SESSIONS [{sessions.Count}].");
             for (int i = 0; i < sessions.Count; i++)
             {
                 ((Session) sessions[i]).Close();
             }
             thread.Interrupt();
-            Log("ALL SESSIONS HAS BEEN CLOSED AND SERVER STOPPED.");
+            LogFactory.GetLog("Main").LogWarning("ALL SESSIONS HAS BEEN CLOSED AND SERVER STOPPED.");
         }
 
         public virtual void onRun(TcpClient client)
@@ -65,12 +66,9 @@ namespace crossfire_server.server
         }
 
         public virtual void GetServerInfo() {
-            Log(string.Format("Sessions: {0}.", sessions.Count));
+            LogFactory.GetLog("Main").LogInfo(string.Format("Sessions: {0}.", sessions.Count));
         }
         
-        public void Log(string message) {
-            Console.Log($"[{name}] {message}");
-        }
 
         public string Name
         {

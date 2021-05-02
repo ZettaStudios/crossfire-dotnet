@@ -1,88 +1,97 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-    <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{1CDBB877-D28F-4817-8EDE-6ECB1516F66C}</ProjectGuid>
-        <OutputType>Exe</OutputType>
-        <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>crossfire_server</RootNamespace>
-        <AssemblyName>crossfire_server</AssemblyName>
-        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Xml" />
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="enums\AccountState.cs" />
-        <Compile Include="enums\Bags.cs" />
-        <Compile Include="enums\CharacterEquipment.cs" />
-        <Compile Include="enums\Characters.cs" />
-        <Compile Include="enums\GameMode.cs" />
-        <Compile Include="enums\Grades.cs" />
-        <Compile Include="enums\Items.cs" />
-        <Compile Include="enums\ItemsModel.cs" />
-        <Compile Include="enums\LoginType.cs" />
-        <Compile Include="enums\LoginErrorsType.cs" />
-        <Compile Include="enums\RoomAnswer.cs" />
-        <Compile Include="enums\RoomOptions.cs" />
-        <Compile Include="enums\RoomStatus.cs" />
-        <Compile Include="enums\RoomWeapons.cs" />
-        <Compile Include="enums\ServerType.cs" />
-        <Compile Include="enums\WeaponsId.cs" />
-        <Compile Include="enums\WeaponTypes.cs" />
-        <Compile Include="Loader.cs" />
-        <Compile Include="network\login\LoginNetwork.cs" />
-        <Compile Include="network\login\Packet.cs" />
-        <Compile Include="network\login\packet\LoginErrorResponsePacket.cs" />
-        <Compile Include="network\login\packet\LoginRequestPacket.cs" />
-        <Compile Include="network\login\packet\LoginResponsePacket.cs" />
-        <Compile Include="network\Network.cs" />
-        <Compile Include="network\DataPacket.cs" />
-        <Compile Include="network\NetworkWriter.cs" />
-        <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="server\GameServer.cs" />
-        <Compile Include="server\LoginServer.cs" />
-        <Compile Include="server\Server.cs" />
-        <Compile Include="session\LoginSession.cs" />
-        <Compile Include="session\Session.cs" />
-        <Compile Include="util\Console.cs" />
-        <Compile Include="util\NetworkUtil.cs" />
-        <Compile Include="util\TestUser.cs" />
-        <Compile Include="util\UnicodeFormatter.cs" />
-    </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1CDBB877-D28F-4817-8EDE-6ECB1516F66C}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>crossfire_server</RootNamespace>
+    <AssemblyName>crossfire_server</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="enums\AccountState.cs" />
+    <Compile Include="enums\Bags.cs" />
+    <Compile Include="enums\CharacterEquipment.cs" />
+    <Compile Include="enums\Characters.cs" />
+    <Compile Include="enums\GameMode.cs" />
+    <Compile Include="enums\Grades.cs" />
+    <Compile Include="enums\Items.cs" />
+    <Compile Include="enums\ItemsModel.cs" />
+    <Compile Include="enums\LoginType.cs" />
+    <Compile Include="enums\LoginErrorsType.cs" />
+    <Compile Include="enums\RoomAnswer.cs" />
+    <Compile Include="enums\RoomOptions.cs" />
+    <Compile Include="enums\RoomStatus.cs" />
+    <Compile Include="enums\RoomWeapons.cs" />
+    <Compile Include="enums\ServerType.cs" />
+    <Compile Include="enums\WeaponsId.cs" />
+    <Compile Include="enums\WeaponTypes.cs" />
+    <Compile Include="Loader.cs" />
+    <Compile Include="network\login\LoginNetwork.cs" />
+    <Compile Include="network\login\Packet.cs" />
+    <Compile Include="network\login\packet\LoginErrorResponsePacket.cs" />
+    <Compile Include="network\login\packet\LoginRequestPacket.cs" />
+    <Compile Include="network\login\packet\LoginResponsePacket.cs" />
+    <Compile Include="network\Network.cs" />
+    <Compile Include="network\DataPacket.cs" />
+    <Compile Include="network\NetworkWriter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="server\GameServer.cs" />
+    <Compile Include="server\LoginServer.cs" />
+    <Compile Include="server\Server.cs" />
+    <Compile Include="session\LoginSession.cs" />
+    <Compile Include="session\Session.cs" />
+    <Compile Include="util\log\Abstracts\ASingleton.cs" />
+    <Compile Include="util\log\Enums\LogType.cs" />
+    <Compile Include="util\log\EventArgs\LogWriteEventArgs.cs" />
+    <Compile Include="util\log\Factories\SingletonFactory.cs" />
+    <Compile Include="util\log\Interfaces\ILog.cs" />
+    <Compile Include="util\log\Interfaces\ISingleton.cs" />
+    <Compile Include="util\log\Factories\LogFactory.cs" />
+    <Compile Include="util\log\Logger.cs" />
+    <Compile Include="util\NetworkUtil.cs" />
+    <Compile Include="util\TestUser.cs" />
+    <Compile Include="util\UnicodeFormatter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.
     <Target Name="BeforeBuild">
     </Target>
     <Target Name="AfterBuild">
     </Target>
     -->
-
 </Project>

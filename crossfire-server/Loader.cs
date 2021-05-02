@@ -3,7 +3,7 @@ using System.Collections;
 using System.IO;
 using System.Threading;
 using crossfire_server.server;
-using Console = crossfire_server.util.Console;
+using crossfire_server.util.log.Factories;
 
 namespace crossfire_server
 {
@@ -56,12 +56,13 @@ namespace crossfire_server
                 }
             }
             catch (IOException e) {
-                Console.Log(e.Message);
+                LogFactory.GetLog("Main").LogFatal(e);
             }
         }
         
         public static void Main(string[] args)
         {
+            LogFactory.OnWrite += util.log.Logger.LogFactory_ConsoleWrite;
             Loader loader = new Loader(args);
             loader.Start();
         }

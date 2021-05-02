@@ -1,11 +1,12 @@
 ﻿using crossfire_server.enums;
 using crossfire_server.util;
+using crossfire_server.util.log.Factories;
 
 namespace crossfire_server.network.login.packet
 {
     public class LoginRequestDataPacket : network.DataPacket
     {
-        public const short NetworkId = (short) LoginType.C2SLogin;
+        public new const short NetworkId = (short) LoginType.C2SLogin;
 
         // Player Data From Client
         public string Identifier;
@@ -38,11 +39,11 @@ namespace crossfire_server.network.login.packet
 
         public void Debug()
         {
-            Console.Log("Username: " + Username);
-            Console.Log("Password: " + Password);
-            Console.Log("Arguments: " + Arguments);
-            Console.Log("MacAddress: " + MacAddress);
-            Console.Log("Identifier: " + Identifier);
+            LogFactory.GetLog("Main").LogInfo("Username: " + Username);
+            LogFactory.GetLog("Main").LogInfo("Password: " + Password);
+            LogFactory.GetLog("Main").LogInfo("Arguments: " + Arguments);
+            LogFactory.GetLog("Main").LogInfo("MacAddress: " + MacAddress);
+            LogFactory.GetLog("Main").LogInfo("Identifier: " + Identifier);
         }
     }
 }
