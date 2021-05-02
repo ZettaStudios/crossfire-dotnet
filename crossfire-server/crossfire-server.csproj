@@ -71,7 +71,6 @@
     <Compile Include="server\Server.cs" />
     <Compile Include="session\LoginSession.cs" />
     <Compile Include="session\Session.cs" />
-    <Compile Include="util\Console.cs" />
     <Compile Include="util\log\Abstracts\ASingleton.cs" />
     <Compile Include="util\log\Enums\LogType.cs" />
     <Compile Include="util\log\EventArgs\LogWriteEventArgs.cs" />

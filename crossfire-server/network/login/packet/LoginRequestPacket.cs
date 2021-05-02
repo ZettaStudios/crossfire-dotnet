@@ -6,7 +6,7 @@ namespace crossfire_server.network.login.packet
 {
     public class LoginRequestDataPacket : network.DataPacket
     {
-        public const short NetworkId = (short) LoginType.C2SLogin;
+        public new const short NetworkId = (short) LoginType.C2SLogin;
 
         // Player Data From Client
         public string Identifier;

@@ -5,7 +5,6 @@ using crossfire_server.network.login.packet;
 using crossfire_server.server;
 using crossfire_server.util;
 using crossfire_server.util.log.Factories;
-//using Console = crossfire_server.util.Console;
 using DataPacket = crossfire_server.network.DataPacket;
 
 namespace crossfire_server.session
@@ -18,27 +17,33 @@ namespace crossfire_server.session
 
         public override void onRun(byte[] buffer)
         {
-            DataPacket packet = server.Network.GetPacket((short) server.Network.GetTypeOf(buffer));
-            if (packet != null)
+            try
             {
-                packet.SetBuffer(buffer);
-                if (packet.IsValid)
+                DataPacket packet = server.Network.GetPacket((short)server.Network.GetTypeOf(buffer));
+                if (packet != null)
                 {
-                    server.Log($"Received Packet [{packet.Pid().ToString()}] [{buffer.Length}]");
-                    LogFactory.GetLog("Main").LogInfo(NetworkUtil.DumpPacket(buffer));
-                    packet.Decode();
-                    HandlePacket(packet);
+                    packet.SetBuffer(buffer);
+                    if (packet.IsValid)
+                    {
+                        LogFactory.GetLog("Main").LogInfo($"Received Packet [{packet.Pid().ToString()}] [{buffer.Length}]");
+                        LogFactory.GetLog("Main").LogInfo(NetworkUtil.DumpPacket(buffer));
+                        packet.Decode();
+                        HandlePacket(packet);
+                    }
+                    else
+                    {
+                        LogFactory.GetLog("Main").LogWarning($"Received Invalid Packet [{packet.Pid().ToString()}] [{buffer.Length}]");
+                    }
                 }
                 else
                 {
-                    server.Log($"Received Invalid Packet [{packet.Pid().ToString()}] [{buffer.Length}]");
+                    LogFactory.GetLog("Main").LogWarning("Unknown Packet.");
                 }
-            }
-            else
-            {
-                server.Log("Unknown Packet.");
-            }
+            
             base.onRun(buffer);
+            }catch (Exception e){
+                LogFactory.GetLog("Main").LogFatal(e);
+            }
         }
         
         public void HandlePacket(DataPacket packet)
@@ -75,13 +80,13 @@ namespace crossfire_server.session
         {
             if (type == LoginErrorsType.NoError)
             {
-                server.Log($"[SESSION] [AUTHENTICATE STATUS: {type.ToString()}].");
+                LogFactory.GetLog("Main").LogInfo($"[SESSION] [AUTHENTICATE STATUS: {type.ToString()}].");
             }
             else
             {
                 LoginErrorResponsePacket packet = new LoginErrorResponsePacket {Identifier = 0, Error = type};
                 SendPacket(packet);
-                server.Log($"[SESSION] [AUTHENTICATE STATUS: {type.ToString()}].");
+                LogFactory.GetLog("Main").LogInfo($"[SESSION] [AUTHENTICATE STATUS: {type.ToString()}].");
             }
         }
     }

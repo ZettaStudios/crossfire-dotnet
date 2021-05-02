@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Threading;
 using crossfire_server.network;
 using crossfire_server.server;
+using crossfire_server.util.log.Factories;
 
 namespace crossfire_server.session
 {
@@ -40,11 +41,11 @@ namespace crossfire_server.session
             server.Sessions.Remove(this);
             try
             {
-                server.Log($"[CLOSED SESSION] [ID: {id}] [{client.Client.RemoteEndPoint}].");
+                LogFactory.GetLog("Main").LogInfo($"[CLOSED SESSION] [ID: {id}] [{client.Client.RemoteEndPoint}].");
                 client.Close();
             } catch (ObjectDisposedException e) 
             {
-                server.Log($"[CLOSED WITH EXCEPTION] [ID: {id}] [{e.Message}].");
+                LogFactory.GetLog("Main").LogInfo($"[CLOSED WITH EXCEPTION] [ID: {id}] [{e.Message}].");
             }
             thread.Interrupt();
         }
@@ -74,7 +75,7 @@ namespace crossfire_server.session
                 }
                 catch (Exception e)
                 {
-                    server.Log($"[PACKET SEND] [ERROR] [MSG:{e.Message}]");
+                    LogFactory.GetLog("Main").LogError($"[PACKET SEND] [ERROR] [MSG:{e.Message}]");
                     Close();
                 }
             }
@@ -85,14 +86,14 @@ namespace crossfire_server.session
             if (ar.AsyncState is DataPacket packet)
             {
                 client.Client.EndSend(ar);
-                server.Log($"Packet Sent [{packet.Pid().ToString()}] [{packet.Buffer.Length}] to [{id}].");
+                LogFactory.GetLog("Main").LogInfo($"Packet Sent [{packet.Pid().ToString()}] [{packet.Buffer.Length}] to [{id}].");
             }
         }
 
         private void Run()
         {
             try {
-                server.Log($"[NEW SESSION] [ID: {id}] [{client.Client.RemoteEndPoint}].");
+                LogFactory.GetLog("Main").LogInfo($"[NEW SESSION] [ID: {id}] [{client.Client.RemoteEndPoint}].");
                 while (true)
                 {
                     if (!client.Connected) return;
@@ -109,7 +110,7 @@ namespace crossfire_server.session
                     try {
                         Close();
                     } catch (IOException ex) {
-                        server.Log(ex.Message);
+                        LogFactory.GetLog("Main").LogFatal(ex);
                     }
                 }
             }
@@ -134,7 +135,7 @@ namespace crossfire_server.session
             get => id;
             set
             {
-                server.Log($"[SESSION [{id}]] ID has been changed to [{value}].");
+                LogFactory.GetLog("Main").LogInfo($"[SESSION [{id}]] ID has been changed to [{value}].");
                 id = value;
             }
         }

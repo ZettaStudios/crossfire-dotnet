@@ -6,7 +6,7 @@ namespace crossfire_server.network.login.packet
 {
     public class LoginErrorResponsePacket : network.DataPacket
     {
-        public const short NetworkId = (short) LoginType.S2CDisplayError;
+        public new const short NetworkId = (short) LoginType.S2CDisplayError;
 
         public uint Identifier = 0;
         public LoginErrorsType Error = LoginErrorsType.UnknownError;

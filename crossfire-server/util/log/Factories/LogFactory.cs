@@ -22,11 +22,11 @@ namespace crossfire_server.util.log.Factories
         public override void Initalize()
         {
             this.Logs = new Dictionary<string, ILog>();
-            //int Width = (Console.LargestWindowWidth * 50) / 100;
-            //int Height = (Console.LargestWindowHeight * 50) / 100;
+            int Width = (Console.LargestWindowWidth * 50) / 100;
+            int Height = (Console.LargestWindowHeight * 50) / 100;
 
-            //if (Width > 0 && Height > 0)
-              //  Console.SetWindowSize(Width, Height);
+            if (Width > 0 && Height > 0)
+                Console.SetWindowSize(Width, Height);
         }
 
         public override void Destroy()
