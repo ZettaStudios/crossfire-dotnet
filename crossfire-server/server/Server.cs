@@ -33,17 +33,17 @@ namespace crossfire_server.server
             thread = new Thread(() =>
             {
                 Thread.CurrentThread.Name = name;
-                LogFactory.GetLog("Main").LogInfo("Loading...");
+                LogFactory.GetLog(name).LogInfo("Loading...");
                 try {
                     IPAddress ipAddress = IPAddress.Parse(address);
                     TcpListener server = new TcpListener(ipAddress, port);
                     server.Start();
-                    LogFactory.GetLog("Main").LogInfo($"Listening at {ipAddress}:{port}.");
+                    LogFactory.GetLog(name).LogInfo($"Listening at {ipAddress}:{port}.");
                     while (true) {
                         onRun(server.AcceptTcpClient());
                     }
                 } catch (IOException e) {
-                    LogFactory.GetLog("Main").LogFatal(e);
+                    LogFactory.GetLog(name).LogFatal(e);
                 }
             });
             thread.Start();
@@ -51,13 +51,13 @@ namespace crossfire_server.server
 
         public void Stop()
         {
-            LogFactory.GetLog("Main").LogWarning($"STOP RECEIVED, CLOSING ALL SESSIONS [{sessions.Count}].");
+            LogFactory.GetLog(name).LogWarning($"STOP RECEIVED, CLOSING ALL SESSIONS [{sessions.Count}].");
             for (int i = 0; i < sessions.Count; i++)
             {
                 ((Session) sessions[i]).Close();
             }
             thread.Interrupt();
-            LogFactory.GetLog("Main").LogWarning("ALL SESSIONS HAS BEEN CLOSED AND SERVER STOPPED.");
+            LogFactory.GetLog(name).LogWarning("ALL SESSIONS HAS BEEN CLOSED AND SERVER STOPPED.");
         }
 
         public virtual void onRun(TcpClient client)
@@ -66,7 +66,7 @@ namespace crossfire_server.server
         }
 
         public virtual void GetServerInfo() {
-            LogFactory.GetLog("Main").LogInfo(string.Format("Sessions: {0}.", sessions.Count));
+            LogFactory.GetLog(name).LogInfo(string.Format("Sessions: {0}.", sessions.Count));
         }
         
 

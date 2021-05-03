@@ -19,7 +19,7 @@ namespace crossfire_server.session
         protected NetworkStream NetworkStream;
 
         protected Queue<DataPacket> _packetQueue = new Queue<DataPacket>();
-        protected int MAX_BUFFER_SIZE = 2047;
+        protected int MAX_BUFFER_SIZE = 4096;
 
         public Session(Server server, TcpClient client)
         {
@@ -41,11 +41,11 @@ namespace crossfire_server.session
             server.Sessions.Remove(this);
             try
             {
-                LogFactory.GetLog("Main").LogInfo($"[CLOSED SESSION] [ID: {id}] [{client.Client.RemoteEndPoint}].");
+                LogFactory.GetLog(server.Name).LogInfo($"[CLOSED SESSION] [ID: {id}] [{client.Client.RemoteEndPoint}].");
                 client.Close();
             } catch (ObjectDisposedException e) 
             {
-                LogFactory.GetLog("Main").LogInfo($"[CLOSED WITH EXCEPTION] [ID: {id}] [{e.Message}].");
+                LogFactory.GetLog(server.Name).LogInfo($"[CLOSED WITH EXCEPTION] [ID: {id}] [{e.Message}].");
             }
             thread.Interrupt();
         }
@@ -75,7 +75,7 @@ namespace crossfire_server.session
                 }
                 catch (Exception e)
                 {
-                    LogFactory.GetLog("Main").LogError($"[PACKET SEND] [ERROR] [MSG:{e.Message}]");
+                    LogFactory.GetLog(server.Name).LogError($"[PACKET SEND] [ERROR] [MSG:{e.Message}]");
                     Close();
                 }
             }
@@ -86,19 +86,19 @@ namespace crossfire_server.session
             if (ar.AsyncState is DataPacket packet)
             {
                 client.Client.EndSend(ar);
-                LogFactory.GetLog("Main").LogInfo($"Packet Sent [{packet.Pid().ToString()}] [{packet.Buffer.Length}] to [{id}].");
+                LogFactory.GetLog(server.Name).LogInfo($"Packet Sent [{packet.Pid().ToString()}] [{packet.Buffer.Length}] to [{id}].");
             }
         }
 
         private void Run()
         {
             try {
-                LogFactory.GetLog("Main").LogInfo($"[NEW SESSION] [ID: {id}] [{client.Client.RemoteEndPoint}].");
+                LogFactory.GetLog(server.Name).LogInfo($"[NEW SESSION] [ID: {id}] [{client.Client.RemoteEndPoint}].");
                 while (true)
                 {
                     if (!client.Connected) return;
                     NetworkStream = client.GetStream();
-                    byte[] buffer = new byte[MAX_BUFFER_SIZE];
+                    byte[] buffer = new byte[client.ReceiveBufferSize];
                     NetworkStream.Read(buffer, 0, buffer.Length);
                     onRun(buffer);
                     TrySend();
@@ -110,7 +110,7 @@ namespace crossfire_server.session
                     try {
                         Close();
                     } catch (IOException ex) {
-                        LogFactory.GetLog("Main").LogFatal(ex);
+                        LogFactory.GetLog(server.Name).LogFatal(ex);
                     }
                 }
             }
@@ -135,7 +135,7 @@ namespace crossfire_server.session
             get => id;
             set
             {
-                LogFactory.GetLog("Main").LogInfo($"[SESSION [{id}]] ID has been changed to [{value}].");
+                LogFactory.GetLog(server.Name).LogInfo($"[SESSION [{id}]] ID has been changed to [{value}].");
                 id = value;
             }
         }

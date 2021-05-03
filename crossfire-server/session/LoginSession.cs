@@ -25,24 +25,23 @@ namespace crossfire_server.session
                     packet.SetBuffer(buffer);
                     if (packet.IsValid)
                     {
-                        LogFactory.GetLog("Main").LogInfo($"Received Packet [{packet.Pid().ToString()}] [{buffer.Length}]");
-                        LogFactory.GetLog("Main").LogInfo(NetworkUtil.DumpPacket(buffer));
                         packet.Decode();
+                        LogFactory.GetLog(server.Name).LogInfo($"Received Packet [{packet.Pid().ToString()}] [{buffer.Length}]");
+                        LogFactory.GetLog(server.Name).LogInfo($"\n{NetworkUtil.DumpPacket(buffer)}");
                         HandlePacket(packet);
                     }
                     else
                     {
-                        LogFactory.GetLog("Main").LogWarning($"Received Invalid Packet [{packet.Pid().ToString()}] [{buffer.Length}]");
+                        LogFactory.GetLog(server.Name).LogWarning($"Received Invalid Packet [{packet.Pid().ToString()}] [{buffer.Length}]");
                     }
                 }
                 else
                 {
-                    LogFactory.GetLog("Main").LogWarning("Unknown Packet.");
-                }
-            
-            base.onRun(buffer);
+                    LogFactory.GetLog(server.Name).LogWarning("Unknown Packet.");
+                } 
+                base.onRun(buffer);
             }catch (Exception e){
-                LogFactory.GetLog("Main").LogFatal(e);
+                LogFactory.GetLog(server.Name).LogFatal(e);
             }
         }
         
@@ -59,7 +58,6 @@ namespace crossfire_server.session
         
         public void Validate(LoginRequestDataPacket packet)
         {
-            Random random = new Random();
             int connected = 1;
             
             if (TestUser.exists && TestUser.username == packet.Username && TestUser.password == packet.Password && connected == 0)
@@ -80,13 +78,13 @@ namespace crossfire_server.session
         {
             if (type == LoginErrorsType.NoError)
             {
-                LogFactory.GetLog("Main").LogInfo($"[SESSION] [AUTHENTICATE STATUS: {type.ToString()}].");
+                LogFactory.GetLog(server.Name).LogInfo($"[SESSION] [AUTHENTICATE STATUS: {type.ToString()}].");
             }
             else
             {
                 LoginErrorResponsePacket packet = new LoginErrorResponsePacket {Identifier = 0, Error = type};
                 SendPacket(packet);
-                LogFactory.GetLog("Main").LogInfo($"[SESSION] [AUTHENTICATE STATUS: {type.ToString()}].");
+                LogFactory.GetLog(server.Name).LogInfo($"[SESSION] [AUTHENTICATE STATUS: {type.ToString()}].");
             }
         }
     }
