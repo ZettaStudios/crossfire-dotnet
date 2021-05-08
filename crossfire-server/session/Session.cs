@@ -33,12 +33,12 @@ namespace crossfire_server.session
             this.client.SendTimeout = TIMEOUT_VALUE;
             thread = new Thread(Run);
             server.Sessions.Add(this);
-            isRunning = thread.IsAlive;
         }
 
         public virtual void Start()
         {
             thread.Start();
+            isRunning = client.Client.Connected;
         }
 
         public virtual void Close()
@@ -58,26 +58,22 @@ namespace crossfire_server.session
         protected virtual void TryReadPacket()
         {
             byte[] buffer = new byte[MAX_BUFFER_SIZE];
-            try
-            {
-                NetworkStream.BeginRead(buffer, 0, buffer.Length, OnReceiveCallback, buffer);
-            }
-            catch (Exception e)
-            {
-                LogFactory.GetLog(server.Name).LogError($"[PACKET RECEIVE] [ERROR] [MSG:{e.Message}]");
-            }
+            NetworkStream.BeginRead(buffer, 0, buffer.Length, OnReceiveCallback, buffer);
         }
 
         private void OnReceiveCallback(IAsyncResult ar)
         {
             try
             {
-                int length = NetworkStream.EndRead(ar);
-                if (length > 0)
+                if (client.Client.Connected)
                 {
-                    byte[] buffer = new byte[length];
-                    Array.Copy((Array) ar.AsyncState, 0, buffer, 0, length);
-                    onRun(buffer);
+                    int length = NetworkStream.EndRead(ar);
+                    if (length > 0)
+                    {
+                        byte[] buffer = new byte[length];
+                        Array.Copy((Array) ar.AsyncState, 0, buffer, 0, length);
+                        onRun(buffer);
+                    }
                 }
             }
             catch (Exception e)
@@ -135,7 +131,7 @@ namespace crossfire_server.session
                 NetworkStream = client.GetStream();
                 while (true)
                 {
-                    if (!client.Connected || !client.Client.Connected) return;
+                    if (!client.Client.Connected) break;
                     if (NetworkStream.CanRead)
                     {
                         TryReadPacket();
@@ -146,6 +142,7 @@ namespace crossfire_server.session
                         TrySendPacket();
                     }
                 }
+                Close();
             } catch (IOException e) {
                 if (e.Message == null)
                     return;

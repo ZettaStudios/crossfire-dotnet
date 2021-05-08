@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using crossfire_server.enums;
 using crossfire_server.network;
 using crossfire_server.session;
 using crossfire_server.util;
@@ -15,6 +16,8 @@ namespace crossfire_server.server
     public class Server
     {
         protected string name = "Base Server";
+        protected ServerType type = ServerType.Unknown;
+        protected int maxConnections = 500;
         protected string token = "Zetta@123";
         protected string address = "127.0.0.1";
         protected short port = 13008;
@@ -42,7 +45,10 @@ namespace crossfire_server.server
                     LogFactory.GetLog(name).LogInfo($"Listening at {ipAddress}:{port}.");
                     while (true)
                     {
-                        server.BeginAcceptTcpClient(OnReceiveConnection, server);
+                        if (server.Pending())
+                        {
+                            server.BeginAcceptTcpClient(OnReceiveConnection, server);
+                        }
                     }
                 } catch (IOException e) {
                     LogFactory.GetLog(name).LogFatal(e);
@@ -110,5 +116,11 @@ namespace crossfire_server.server
         public ArrayList Sessions => sessions;
 
         public Network Network => network;
+
+        public ServerType Type
+        {
+            get => type;
+            set => type = value;
+        }
     }
 }

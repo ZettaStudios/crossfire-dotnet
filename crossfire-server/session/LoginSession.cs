@@ -60,7 +60,7 @@ namespace crossfire_server.session
 
         private void Validate(LoginRequestDataPacket packet)
         {
-            int connected = 1;
+            int connected = 0;
             
             if (TestUser.exists && TestUser.username == packet.Username && TestUser.password == packet.Password && connected == 0)
             {
@@ -80,6 +80,8 @@ namespace crossfire_server.session
         {
             if (type == LoginErrorsType.NoError)
             {
+                LoginResponsePacket packet = new LoginResponsePacket();
+                SendPacket(packet);
                 LogFactory.GetLog(server.Name).LogInfo($"[SESSION] [AUTHENTICATE STATUS: {type.ToString()}].");
             }
             else

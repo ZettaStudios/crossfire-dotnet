@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using crossfire_server.enums;
+using crossfire_server.model;
 using crossfire_server.server;
 using crossfire_server.util.log.Factories;
 
@@ -14,7 +17,7 @@ namespace crossfire_server
 
         public Loader(string[] args) {
             _servers.Add(new LoginServer(args));
-            _servers.Add(new GameServer(args));
+            _servers.Add(new RookieServer(args));
         }
         
         public void Start() {
@@ -43,13 +46,13 @@ namespace crossfire_server
                 while (true)
                 {
                     string args = System.Console.ReadLine();
-                    if (args.ToLower().Equals("info"))
+                    if (args != null && args.ToLower().Equals("info"))
                     {
                         foreach (Server server in _servers)
                         {
                             server.GetServerInfo();
                         }
-                    } else if (args.ToLower().Equals("stop-all"))
+                    } else if (args != null && args.ToLower().Equals("stop-all"))
                     {
                         StopAll();
                     }
@@ -59,12 +62,32 @@ namespace crossfire_server
                 LogFactory.GetLog("Main").LogFatal(e);
             }
         }
+
+        public List<GameServerInfo> GetAllGameServerInfo()
+        {
+            List<GameServerInfo> result = new List<GameServerInfo>();
+            foreach (Server server in _servers)
+            {
+                if (server.Type.Equals(ServerType.Game))
+                {
+                    result.Add(((GameServer)server).Info);
+                }
+            }
+            return result;
+        }
         
         public static void Main(string[] args)
         {
             LogFactory.OnWrite += util.log.Logger.LogFactory_ConsoleWrite;
-            Loader loader = new Loader(args);
-            loader.Start();
+            try
+            {
+                Loader loader = new Loader(args);
+                loader.Start();
+            }
+            catch (Exception e)
+            {
+                LogFactory.GetLog("Loader").LogError(e.Message);
+            }
         }
     }
 }

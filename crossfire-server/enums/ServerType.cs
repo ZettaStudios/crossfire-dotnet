@@ -1,8 +1,9 @@
 ﻿namespace crossfire_server.enums
 {
-    public enum ServerType : ushort
+    public enum ServerType : int
     {
-        Normal = 1,
-        Clan
+        Unknown,
+        Authentication,
+        Game
     }
 }

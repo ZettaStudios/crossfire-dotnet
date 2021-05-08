@@ -2,17 +2,17 @@
 
 namespace crossfire_server.model
 {
-    public class GameServer
+    public class GameServerInfo
     {
         public string Name;
 
-        public int Port; // (ushort)
+        public int Port;
 
         public uint MaxPlayers;
 
-        public byte[] AddressBytes;
+        public byte[] IpBytes;
 
-        public string Address;
+        public string Ip;
 
         public ushort NoLimit;
 
@@ -20,6 +20,6 @@ namespace crossfire_server.model
 
         public ushort MaxRank;
 
-        public ServerType serverType;
+        public GameServerType Type;
     }
 }
