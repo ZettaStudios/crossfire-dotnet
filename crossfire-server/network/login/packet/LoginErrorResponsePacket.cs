@@ -20,10 +20,11 @@ namespace crossfire_server.network.login.packet
         {
             
         }
+        // F1 A0 1F 00 01 00 04 00
         public override void Encode()
         {
-            byte[] tmp = new byte[1445];
-            tmp = Write((byte)Error, 2, tmp);
+            byte[] tmp = new byte[8096];
+            tmp = Write((byte)Error, 0, tmp);
             if (Error == LoginErrorsType.PlayerAlreadyLoggedIn)
                 tmp = Write(Identifier, 26, tmp);
             
@@ -34,18 +35,11 @@ namespace crossfire_server.network.login.packet
             
             buffer[3] = 0;
             buffer[4] = 1;
-            buffer[5] = 0;
+            buffer[5] = 0; // 9
             
             buffer[0] = StartsWith;
-            buffer[buffer.Length - 1] = 0;
-            Debug();
-        }
-
-        public void Debug()
-        {
-            LogFactory.GetLog("Main").LogSuccess($"[Login Server] [{LoginType.S2CDisplayError.ToString()}]");
-            LogFactory.GetLog("Main").LogSuccess($"{NetworkUtil.DumpPacket(buffer)}");
-            LogFactory.GetLog("Main").LogSuccess("----- PACKET END -----");
+            buffer[buffer.Length - 9] = 1;
+            buffer[buffer.Length - 1] = EndsWith;
         }
     }
 }

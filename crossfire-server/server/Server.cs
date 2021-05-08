@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -39,14 +40,28 @@ namespace crossfire_server.server
                     TcpListener server = new TcpListener(ipAddress, port);
                     server.Start();
                     LogFactory.GetLog(name).LogInfo($"Listening at {ipAddress}:{port}.");
-                    while (true) {
-                        onRun(server.AcceptTcpClient());
+                    while (true)
+                    {
+                        server.BeginAcceptTcpClient(OnReceiveConnection, server);
                     }
                 } catch (IOException e) {
                     LogFactory.GetLog(name).LogFatal(e);
                 }
             });
             thread.Start();
+        }
+
+        private void OnReceiveConnection(IAsyncResult ar)
+        {
+            try
+            {
+                TcpListener server = (TcpListener) ar.AsyncState;
+                onRun(server.EndAcceptTcpClient(ar));
+            }
+            catch (Exception e)
+            {
+                LogFactory.GetLog(name).LogError(e.Message);
+            }
         }
 
         public void Stop()

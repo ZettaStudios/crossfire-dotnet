@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using crossfire_server.util.log.Enums;
 using crossfire_server.util.log.EventArgs;
@@ -12,21 +9,19 @@ using crossfire_server.util.log.Abstracts;
 
 namespace crossfire_server.util.log.Factories
 {
-
-
     public class LogFactory : ASingleton<LogFactory>
     {
-        private Dictionary<string, ILog> Logs;
+        private Dictionary<string, ILog> _logs;
         public static event EventHandler<LogWriteEventArgs> OnWrite;
 
         public override void Initalize()
         {
-            this.Logs = new Dictionary<string, ILog>();
-            int Width = (Console.LargestWindowWidth * 50) / 100;
-            int Height = (Console.LargestWindowHeight * 50) / 100;
+            _logs = new Dictionary<string, ILog>();
+            int width = (Console.LargestWindowWidth * 50) / 100;
+            int height = (Console.LargestWindowHeight * 50) / 100;
 
-            if (Width > 0 && Height > 0)
-                Console.SetWindowSize(Width, Height);
+            if (width > 0 && height > 0)
+                Console.SetWindowSize(width, height);
         }
 
         public override void Destroy()
@@ -34,24 +29,24 @@ namespace crossfire_server.util.log.Factories
 
         }
 
-        public static ILog GetLog(string Name)
+        public static ILog GetLog(string name)
         {
-            if (!Instance.Logs.ContainsKey(Name))
+            if (!Instance._logs.ContainsKey(name))
             {
-                ILog Log = new Log(Name);
-                Instance.Logs.Add(Name, Log);
+                ILog log = new Log(name);
+                Instance._logs.Add(name, log);
             }
-             return Instance.Logs[Name];
+            return Instance._logs[name];
         }
 
-        public static ILog GetLog(Type LogType)
+        public static ILog GetLog(Type logType)
         {
-            return GetLog(LogType.Name);
+            return GetLog(logType.Name);
         }
 
-        public static ILog GetLog(object Instance)
+        public static ILog GetLog(object instance)
         {
-            return GetLog(Instance.GetType());
+            return GetLog(instance.GetType());
         }
 
         public static ILog GetLog<T>()
@@ -59,51 +54,51 @@ namespace crossfire_server.util.log.Factories
             return GetLog(typeof(T));
         }
 
-        private static void CallOnWrite(ILog Log, string Message, LogType Type) 
+        private static void CallOnWrite(ILog log, string message, LogType type) 
         {
             if (OnWrite != null)
             {
-                LogWriteEventArgs Args = new LogWriteEventArgs(Log, Message, Type); 
-                OnWrite(Log, Args);
+                LogWriteEventArgs args = new LogWriteEventArgs(log, message, type); 
+                OnWrite(log, args);
             }
         }
 
         private class Log : ILog
         {
             public string Name { get; private set; }
-            public Log(string Name)
+            public Log(string name)
             {
-                this.Name = Name;
+                Name = name;
             }
 
-            public void LogInfo(string Message, params object[] Args)
+            public void LogInfo(string message, params object[] args)
             {
-                Message = string.Format(Message, Args);
-                CallOnWrite(this, Message, LogType.Information);
+                message = string.Format(message, args);
+                CallOnWrite(this, message, LogType.Information);
             }
 
-            public void LogSuccess(string Message, params object[] Args)
+            public void LogSuccess(string message, params object[] args)
             {
-                Message = string.Format(Message, Args);
-                CallOnWrite(this, Message, LogType.Success);
+                message = string.Format(message, args);
+                CallOnWrite(this, message, LogType.Success);
             }
 
-            public void LogWarning(string Message, params object[] Args)
+            public void LogWarning(string message, params object[] args)
             {
-                Message = string.Format(Message, Args);
-                CallOnWrite(this, Message, LogType.Warning);
+                message = string.Format(message, args);
+                CallOnWrite(this, message, LogType.Warning);
             }
 
-            public void LogError(string Message, params object[] Args)
+            public void LogError(string message, params object[] args)
             {
-                Message = string.Format(Message, Args);
-                CallOnWrite(this, Message, LogType.Error);
+                message = string.Format(message, args);
+                CallOnWrite(this, message, LogType.Error);
             }
 
             public void LogFatal(Exception e)
             {
-                string Message = string.Format("Name: {1}{0}Message: {2}{0}Stack trace:{3}", Environment.NewLine, e.GetType().Name, e.Message, e.StackTrace);
-                CallOnWrite(this, Message, LogType.Fatal);
+                string message = string.Format("Name: {1}{0}Message: {2}{0}Stack trace:{3}", Environment.NewLine, e.GetType().Name, e.Message, e.StackTrace);
+                CallOnWrite(this, message, LogType.Fatal);
             }
         }
     }

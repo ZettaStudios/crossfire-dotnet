@@ -22,14 +22,11 @@ namespace crossfire_server.network.login.packet
 
         public override void Decode()
         {
-            if (IsValid)
-            {
-                Username = ToString(16, 20);
-                Password = ToString(37, 20);
-                Arguments = ToString(145, 12);
-                MacAddress = ToString(407, 12);
-                Identifier = ToString(77, 32);
-            }
+            Username = ToString(16, 20);
+            Password = ToString(37, 20);
+            Arguments = ToString(145, 12);
+            MacAddress = ToString(407, 12);
+            Identifier = ToString(77, 32);
         }
 
         public override void Encode()

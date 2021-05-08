@@ -6,6 +6,17 @@ namespace crossfire_server.util
 {
     public class NetworkUtil
     {
+        public static String MacPattern = "%02X%s";
+        public static string ParseMac(byte[] mac)
+        {
+            string result = "";
+            for (int k = 0; k < mac.Length; k++)
+            {
+                result += string.Format(MacPattern, mac[k], (k < mac.Length - 1) ? ":" : "");
+            }
+            return result;
+        }
+        
         public static byte[] StringToBytes(string str, int BufferLength = 0, bool endsWithF2 = false)
         {
             if (BufferLength != 0)

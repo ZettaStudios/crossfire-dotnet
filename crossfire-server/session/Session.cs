@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using crossfire_server.network;
@@ -19,13 +20,17 @@ namespace crossfire_server.session
         protected NetworkStream NetworkStream;
 
         protected Queue<DataPacket> _packetQueue = new Queue<DataPacket>();
-        protected int MAX_BUFFER_SIZE = 4096;
+        protected int MAX_BUFFER_SIZE = 2048;
+        protected int TIMEOUT_VALUE = 120;
 
         public Session(Server server, TcpClient client)
         {
             id = Guid.NewGuid().ToString(); // Temp ID
             this.server = server;
             this.client = client;
+            this.client.NoDelay = true;
+            this.client.ReceiveTimeout = TIMEOUT_VALUE;
+            this.client.SendTimeout = TIMEOUT_VALUE;
             thread = new Thread(Run);
             server.Sessions.Add(this);
             isRunning = thread.IsAlive;
@@ -42,14 +47,46 @@ namespace crossfire_server.session
             try
             {
                 LogFactory.GetLog(server.Name).LogInfo($"[CLOSED SESSION] [ID: {id}] [{client.Client.RemoteEndPoint}].");
-                client.Close();
+                client.Dispose();
             } catch (ObjectDisposedException e) 
             {
                 LogFactory.GetLog(server.Name).LogInfo($"[CLOSED WITH EXCEPTION] [ID: {id}] [{e.Message}].");
             }
             thread.Interrupt();
         }
-        public void SendPacket(DataPacket packet)
+
+        protected virtual void TryReadPacket()
+        {
+            byte[] buffer = new byte[MAX_BUFFER_SIZE];
+            try
+            {
+                NetworkStream.BeginRead(buffer, 0, buffer.Length, OnReceiveCallback, buffer);
+            }
+            catch (Exception e)
+            {
+                LogFactory.GetLog(server.Name).LogError($"[PACKET RECEIVE] [ERROR] [MSG:{e.Message}]");
+            }
+        }
+
+        private void OnReceiveCallback(IAsyncResult ar)
+        {
+            try
+            {
+                int length = NetworkStream.EndRead(ar);
+                if (length > 0)
+                {
+                    byte[] buffer = new byte[length];
+                    Array.Copy((Array) ar.AsyncState, 0, buffer, 0, length);
+                    onRun(buffer);
+                }
+            }
+            catch (Exception e)
+            {
+                LogFactory.GetLog(server.Name).LogError($"[PACKET RECEIVE] [ERROR] [MSG:{e.Message}]");
+            }
+        }
+
+        protected void SendPacket(DataPacket packet)
         {
             _packetQueue.Enqueue(packet);
         }
@@ -62,21 +99,22 @@ namespace crossfire_server.session
             return packet != null;
         }
         
-        private void TrySend()
+        private void TrySendPacket()
         {
-            DataPacket packet;
-            while (TryDequeuePacket(out packet))
+            while (TryDequeuePacket(out var packet))
             {
                 try
                 {
                     packet.Encode();
-                    client.Client.BeginSend(packet.Buffer, 0, packet.Buffer.Length, SocketFlags.None,
-                        CompletePacketSend, packet);
+                    if (packet.IsValid)
+                    {
+                        NetworkStream.BeginWrite(packet.Buffer, 0, packet.Buffer.Length,
+                            CompletePacketSend, packet);
+                    }
                 }
                 catch (Exception e)
                 {
                     LogFactory.GetLog(server.Name).LogError($"[PACKET SEND] [ERROR] [MSG:{e.Message}]");
-                    Close();
                 }
             }
         }
@@ -85,7 +123,7 @@ namespace crossfire_server.session
         {
             if (ar.AsyncState is DataPacket packet)
             {
-                client.Client.EndSend(ar);
+                NetworkStream.EndWrite(ar);
                 LogFactory.GetLog(server.Name).LogInfo($"Packet Sent [{packet.Pid().ToString()}] [{packet.Buffer.Length}] to [{id}].");
             }
         }
@@ -94,14 +132,19 @@ namespace crossfire_server.session
         {
             try {
                 LogFactory.GetLog(server.Name).LogInfo($"[NEW SESSION] [ID: {id}] [{client.Client.RemoteEndPoint}].");
+                NetworkStream = client.GetStream();
                 while (true)
                 {
-                    if (!client.Connected) return;
-                    NetworkStream = client.GetStream();
-                    byte[] buffer = new byte[client.ReceiveBufferSize];
-                    NetworkStream.Read(buffer, 0, buffer.Length);
-                    onRun(buffer);
-                    TrySend();
+                    if (!client.Connected || !client.Client.Connected) return;
+                    if (NetworkStream.CanRead)
+                    {
+                        TryReadPacket();
+                    }
+
+                    if (NetworkStream.CanWrite)
+                    {
+                        TrySendPacket();
+                    }
                 }
             } catch (IOException e) {
                 if (e.Message == null)
@@ -116,7 +159,12 @@ namespace crossfire_server.session
             }
         }
 
-        public virtual void onRun(byte[] bytes) {}
+        protected virtual void onRun(byte[] bytes) {}
+        
+        public SocketAddress GetAddress()
+        {
+            return client.Client.RemoteEndPoint.Serialize();
+        }
         
         public Server Server
         {

@@ -15,7 +15,7 @@ namespace crossfire_server.session
         {
         }
 
-        public override void onRun(byte[] buffer)
+        protected override void onRun(byte[] buffer)
         {
             try
             {
@@ -26,13 +26,15 @@ namespace crossfire_server.session
                     if (packet.IsValid)
                     {
                         packet.Decode();
-                        LogFactory.GetLog(server.Name).LogInfo($"Received Packet [{packet.Pid().ToString()}] [{buffer.Length}]");
-                        LogFactory.GetLog(server.Name).LogInfo($"\n{NetworkUtil.DumpPacket(buffer)}");
+                        LogFactory.GetLog(server.Name).LogInfo($"Received Packet [{packet.Pid().ToString()}] [{packet.Buffer.Length}]");
+                        LogFactory.GetLog(server.Name).LogInfo($"\n{NetworkUtil.DumpPacket(packet.Buffer)}");
                         HandlePacket(packet);
                     }
                     else
                     {
-                        LogFactory.GetLog(server.Name).LogWarning($"Received Invalid Packet [{packet.Pid().ToString()}] [{buffer.Length}]");
+                        LogFactory.GetLog(server.Name).LogWarning($"Received Invalid Packet [{packet.Pid().ToString()}] [{packet.Buffer.Length}]");
+                        packet.Decode();
+                        LogFactory.GetLog(server.Name).LogInfo($"\n{NetworkUtil.DumpPacket(packet.Buffer)}");
                     }
                 }
                 else
@@ -44,8 +46,8 @@ namespace crossfire_server.session
                 LogFactory.GetLog(server.Name).LogFatal(e);
             }
         }
-        
-        public void HandlePacket(DataPacket packet)
+
+        private void HandlePacket(DataPacket packet)
         {
             switch (packet.Pid())
             {
@@ -55,8 +57,8 @@ namespace crossfire_server.session
                     break;
             }
         }
-        
-        public void Validate(LoginRequestDataPacket packet)
+
+        private void Validate(LoginRequestDataPacket packet)
         {
             int connected = 1;
             
@@ -66,15 +68,15 @@ namespace crossfire_server.session
             }
             else if (TestUser.exists && TestUser.username == packet.Username && TestUser.password == packet.Password)
             {
-                Authenticate(LoginErrorsType.PlayerAlreadyLoggedIn, packet);
+                Authenticate(LoginErrorsType.YouCannotAccessTheTestServer, packet);
             }
             else
             {
                 Authenticate(LoginErrorsType.UnknownUsernameOrPassword, packet);
             }
         }
-        
-        public void Authenticate(LoginErrorsType type, LoginRequestDataPacket request)
+
+        private void Authenticate(LoginErrorsType type, LoginRequestDataPacket request)
         {
             if (type == LoginErrorsType.NoError)
             {
