@@ -68,7 +68,7 @@ namespace crossfire_server.session
             }
             else if (TestUser.exists && TestUser.username == packet.Username && TestUser.password == packet.Password)
             {
-                Authenticate(LoginErrorsType.YouCannotAccessTheTestServer, packet);
+                Authenticate(LoginErrorsType.PlayerAlreadyLoggedIn, packet);
             }
             else
             {
