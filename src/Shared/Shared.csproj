@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="util\log\enums\**" />
+      <Compile Remove="util\**" />
+      <Compile Include="Util\Log\Abstracts\ASingleton.cs" />
+      <Compile Include="Util\Log\Enums\LogType.cs" />
+      <Compile Include="Util\Log\EventArgs\LogWriteEventArgs.cs" />
+      <Compile Include="Util\Log\Factories\LogFactory.cs" />
+      <Compile Include="Util\Log\Factories\SingletonFactory.cs" />
+      <Compile Include="Util\Log\Interfaces\ILog.cs" />
+      <Compile Include="Util\Log\Interfaces\ISingleton.cs" />
+      <Compile Include="Util\Log\Logger.cs" />
+      <Compile Include="Util\NetworkUtil.cs" />
+      <Compile Include="Util\TestUser.cs" />
+      <Compile Include="Util\UnicodeFormatter.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="util\log\enums\**" />
+      <EmbeddedResource Remove="util\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="util\log\enums\**" />
+      <None Remove="util\**" />
+    </ItemGroup>
+
+</Project>
