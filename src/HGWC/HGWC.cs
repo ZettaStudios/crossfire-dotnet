@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace HGWC {
-    class HGWC {
+    internal class HGWC {
         static void Main(string[] args) {
             Console.WriteLine("Hello World!");
         }
