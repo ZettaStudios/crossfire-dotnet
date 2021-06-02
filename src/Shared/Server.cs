@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using Shared.Command;
 using Shared.Enum;
 using Shared.Util.Log.Factories;
 
@@ -20,6 +21,9 @@ namespace Shared
         protected Thread thread;
         protected ArrayList sessions = new ArrayList();
         protected Network.Network network;
+        protected Scheduler.Scheduler scheduler;
+        protected CommandMap commandMap;
+        private CommandProcessor commandProcessor;
         private bool _alive = false;
 
         public Server(string[] args)
@@ -28,6 +32,9 @@ namespace Shared
             {
                 port = short.Parse(args[0]);
             }
+            scheduler = new Scheduler.Scheduler(this);
+            commandMap = new SimpleCommandMap();
+            commandProcessor = new CommandProcessor(this, commandMap);
         }
         
         public virtual void Start()
@@ -53,6 +60,8 @@ namespace Shared
                 }
             });
             thread.Start();
+            scheduler.Start();
+            commandProcessor.Start();
             _alive = true;
         }
 
@@ -86,8 +95,8 @@ namespace Shared
             
         }
 
-        public virtual void GetServerInfo() {
-            LogFactory.GetLog(name).LogInfo($"Sessions: {sessions.Count} of {maxConnections}.");
+        public virtual string GetServerInfo() {
+            return $"Sessions: {sessions.Count} of {maxConnections}.";
         }
         
 
@@ -116,6 +125,14 @@ namespace Shared
         public ArrayList Sessions => sessions;
 
         public Network.Network Network => network;
+
+        public Scheduler.Scheduler Scheduler => scheduler;
+
+        public CommandMap CommandMap
+        {
+            get => commandMap;
+            set => commandMap = value;
+        }
 
         public ServerType Type
         {
