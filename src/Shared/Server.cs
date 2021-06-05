@@ -60,9 +60,9 @@ namespace Shared
                 }
             });
             thread.Start();
+            _alive = true;
             scheduler.Start();
             commandProcessor.Start();
-            _alive = true;
         }
 
         private void OnReceiveConnection(IAsyncResult ar)

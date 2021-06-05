@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using Login.Enum;
 using Login.Network.packet;
+using Login.Task;
 using Shared;
 using Shared.Network;
 using Shared.Util;
@@ -11,17 +12,20 @@ namespace Login.Session
 {
     public class LoginSession : Shared.Session.Session
     {
+        private KickInactiveSession _kickTask;
         public LoginSession(Server server, TcpClient client) : base(server, client)
         {
+            _kickTask = new KickInactiveSession(this, server.Scheduler);
+            server.Scheduler.AddTask(_kickTask, 1, true);
         }
-        protected override void onRun(byte[] buffer)
+        protected override void OnRun(byte[] buffer)
         {
             try
             {
                 DataPacket packet = server.Network.GetPacket((short)server.Network.GetTypeOf(buffer));
                 if (packet != null)
                 {
-                    packet.SetBuffer(buffer);
+                    packet.Buffer = buffer;
                     if (packet.IsValid)
                     {
                         packet.Decode();
@@ -40,13 +44,13 @@ namespace Login.Session
                 {
                     LogFactory.GetLog(server.Name).LogWarning("Unknown Packet.");
                 } 
-                base.onRun(buffer);
+                base.OnRun(buffer);
             }catch (Exception e){
                 LogFactory.GetLog(server.Name).LogFatal(e);
             }
         }
 
-        private void HandlePacket(DataPacket packet)
+        protected override void HandlePacket(DataPacket packet)
         {
             switch (packet.Pid())
             {
@@ -55,11 +59,12 @@ namespace Login.Session
                     Validate(loginRequestDataPacket);
                     break;
             }
+            base.HandlePacket(packet);
         }
 
         private void Validate(LoginRequestDataPacket packet)
         {
-            int connected = 0;
+            int connected = 1;
             
             if (TestUser.exists && TestUser.username == packet.Username && TestUser.password == packet.Password && connected == 0)
             {
@@ -79,6 +84,7 @@ namespace Login.Session
         {
             if (type == ErrorsType.NoError)
             {
+                Id = request.Identifier;
                 LoginResponsePacket packet = new LoginResponsePacket();
                 SendPacket(packet);
                 LogFactory.GetLog(server.Name).LogInfo($"[SESSION] [AUTHENTICATE STATUS: {type.ToString()}].");
@@ -100,6 +106,7 @@ namespace Login.Session
                     SendPacket(response);
                     break;
             }
+            _kickTask.Inactive = 0;
             base.OnFinishPacketSent(packet);
         }
     }

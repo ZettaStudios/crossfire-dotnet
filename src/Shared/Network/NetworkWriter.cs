@@ -11,30 +11,7 @@ namespace Shared.Network
         public byte[] Buffer
         {
             get => buffer;
-        }
-
-        public void SetBuffer(byte[] value)
-        {
-            buffer = new byte[value.Length + 7];
-            buffer[0] = DataPacket.StartsWith;
-            buffer[buffer.Length - 1] = DataPacket.EndsWith;
-            for (int i = 6; i < (value.Length + 6); i++)
-            {
-                buffer[i] = value[i - 6];
-            }
-            Write((ushort) buffer.Length, 1);
-        }
-        
-        public void SetBuffer(byte[] value, int optionalLength)
-        {
-            buffer = new byte[value.Length + 7];
-            buffer[0] = DataPacket.StartsWith;
-            buffer[buffer.Length - 1] = DataPacket.EndsWith;
-            for (int i = 6; i < (value.Length + 6); i++)
-            {
-                buffer[i] = value[i - 6];
-            }
-            Write((ushort) optionalLength, 1);
+            set => buffer = value;
         }
 
         public void Write(string arg, int offset)
@@ -241,7 +218,7 @@ namespace Shared.Network
             }
         }
 
-        public String ToString(int index, int count)
+        public string ToString(int index, int count)
         {
             return Encoding.ASCII.GetString(buffer, index, count)
                 .Replace(Encoding.ASCII.GetString(new byte[] {0x0}), "");

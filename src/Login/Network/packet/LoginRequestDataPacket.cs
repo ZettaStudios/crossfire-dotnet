@@ -23,9 +23,9 @@ namespace Login.Network.packet
         {
             Username = ToString(16, 20);
             Password = ToString(37, 20);
-            Arguments = ToString(145, 12);
-            MacAddress = ToString(407, 12);
-            Identifier = ToString(77, 32);
+            Arguments = ToString(160, 224);
+            MacAddress = ToString(buffer.Length-24, 12);
+            Identifier = ToString(77, 41);
         }
 
         public override void Encode()

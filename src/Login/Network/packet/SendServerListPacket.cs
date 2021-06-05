@@ -16,9 +16,16 @@ namespace Login.Network.packet
             throw new System.NotImplementedException();
         }
 
+        // Not Finished
         public override void Encode()
         {
-            throw new System.NotImplementedException();
+            byte[] tmp = new byte[8096];
+            buffer = Write((byte)ErrorsType.NoError, 0, tmp);
+            buffer[3] = 0;
+            buffer[4] = 1;
+            buffer[5] = 0;
+            buffer[0] = StartsWith;
+            buffer[^1] = EndsWith;
         }
     }
 }

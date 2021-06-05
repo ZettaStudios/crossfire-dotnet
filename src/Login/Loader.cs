@@ -9,14 +9,14 @@ namespace Login
         static void Main(string[] args)
         {
             LogFactory.OnWrite += Logger.LogFactory_ConsoleWrite;
+            LoginServer server = new LoginServer(args);
             try
             {
-                LoginServer server = new LoginServer(args);
                 server.Start();
             }
             catch (Exception e)
             {
-                LogFactory.GetLog("Loader").LogError(e.Message);
+                LogFactory.GetLog($"{server.Name}:Loader").LogError(e.Message);
             }
         }
     }

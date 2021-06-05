@@ -1,6 +1,7 @@
 ﻿using System.Net.Sockets;
 using Login.Network;
 using Login.Session;
+using Login.Task;
 using Shared;
 using Shared.Enum;
 
@@ -13,6 +14,7 @@ namespace Login {
             port = 13008;
             maxConnections = 200;
             network = new LoginNetwork();
+            // Scheduler.AddTask(new TestTask(Scheduler), 1, true);
         }
 
         public override void OnRun(TcpClient client)

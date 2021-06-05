@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using Shared.Enum;
 using Shared.Network;
 using Shared.Util.Log.Factories;
 
@@ -70,8 +71,8 @@ namespace Shared.Session
                     if (length > 0)
                     {
                         byte[] buffer = new byte[length];
-                        Array.Copy((Array) ar.AsyncState, 0, buffer, 0, length);
-                        onRun(buffer);
+                        Array.Copy((Array) ar.AsyncState ?? throw new InvalidOperationException(), 0, buffer, 0, length);
+                        OnRun(buffer);
                     }
                 }
             }
@@ -81,7 +82,7 @@ namespace Shared.Session
             }
         }
 
-        protected void SendPacket(DataPacket packet)
+        public void SendPacket(DataPacket packet)
         {
             _packetQueue.Enqueue(packet);
         }
@@ -101,7 +102,7 @@ namespace Shared.Session
                 try
                 {
                     packet.Encode();
-                    if (packet.IsValid)
+                    if (packet.IsValid || server.Type.Equals(ServerType.Other))
                     {
                         NetworkStream.BeginWrite(packet.Buffer, 0, packet.Buffer.Length,
                             CompletePacketSend, packet);
@@ -125,6 +126,11 @@ namespace Shared.Session
         }
 
         public virtual void OnFinishPacketSent(DataPacket packet)
+        {
+            
+        }
+
+        protected virtual void HandlePacket(DataPacket packet)
         {
             
         }
@@ -161,7 +167,7 @@ namespace Shared.Session
             }
         }
 
-        protected virtual void onRun(byte[] bytes) {}
+        protected virtual void OnRun(byte[] bytes) {}
         
         public SocketAddress GetAddress()
         {
@@ -185,7 +191,7 @@ namespace Shared.Session
             get => id;
             set
             {
-                LogFactory.GetLog(server.Name).LogInfo($"[SESSION [{id}]] ID has been changed to [{value}].");
+                LogFactory.GetLog(server.Name).LogInfo($"[SESSION : {id}] ID has been changed to [{value}].");
                 id = value;
             }
         }

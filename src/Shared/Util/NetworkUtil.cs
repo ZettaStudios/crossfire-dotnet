@@ -26,7 +26,7 @@ namespace Shared.Util {
                 return temp.ToArray();
             } else {
                 var result = str.Split(new[] {' '});
-                var temp = new List<byte>(1024);
+                var temp = new List<byte>();
                 for (var i = 0; i < result.Length; i++) temp.Add(byte.Parse(result[i], NumberStyles.HexNumber));
                 return temp.ToArray();
             }

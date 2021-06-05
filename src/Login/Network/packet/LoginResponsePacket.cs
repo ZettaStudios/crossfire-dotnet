@@ -18,14 +18,14 @@ namespace Login.Network.packet
             
         }
 
+        // not finished
         public override void Encode()
         {
-            byte[] tmp = new byte[790];
+            byte[] tmp = new byte[8096];
             tmp[1] = 32;
             tmp[2] = 3;
             tmp[4] = 25;
             tmp[8] = 2;
-            SetBuffer(tmp);
             LogFactory.GetLog("LoginResponsePacket").LogInfo($"\n{NetworkUtil.DumpPacket(buffer)}");
         }
     }

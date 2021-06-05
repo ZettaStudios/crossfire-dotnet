@@ -4,6 +4,7 @@
     {
         Unknown,
         Authentication,
-        Game
+        Game,
+        Other
     }
 }
