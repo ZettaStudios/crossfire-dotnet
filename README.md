@@ -12,7 +12,7 @@ English | [Português](README.pt-PT.md)
 ## Overview
 This is a project being developed by the community, and is not affiliated with any of the companies belonging to [Neowiz](https://www.neowiz.com/), [Playgra (Arario)](http://playgra.com/), [VTC Game](https://www.vtcgame.vn/), [Tencent](https://www.tencent.com/), [Z8Games](https://www.z8games.com/), [GameClub](https://www.gameclub.ph/) and [LYTO](https://www.lytogame.com/). The project is developed with .NET Core 3.1.
 
-# How to Run the Server.
+## How to Run the Server.
 - **Download the Client of West/NA**
 - **Fork our Rest API** | [Click Here](https://github.com/ZettaStudios/crossfire-api)
 - **Fork our Server**
