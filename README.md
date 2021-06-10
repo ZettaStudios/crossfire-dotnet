@@ -3,7 +3,7 @@
 [![](https://img.shields.io/github/workflow/status/ZettaStudios/crossfire-dotnet/Windows%20-%20.NET%20Core?label=Windows%20Build&logo=windows&logoColor=%23FFFFFF&style=flat-square)](https://github.com/ZettaStudios/crossfire-dotnet/actions/workflows/windows-dotnet.yml)
 [![](https://img.shields.io/github/workflow/status/ZettaStudios/crossfire-dotnet/Linux%20-%20.NET%20Core?label=Linux%20Build&logo=linux&logoColor=%23FFFFFF&style=flat-square)](https://github.com/ZettaStudios/crossfire-dotnet/actions/workflows/linux-dotnet.yml)
 [![](https://img.shields.io/github/workflow/status/ZettaStudios/crossfire-dotnet/macOS%20-%20.NET%20Core?label=macOS%20Build&logo=apple&logoColor=%23FFFFFF&style=flat-square)](https://github.com/ZettaStudios/crossfire-dotnet/actions/workflows/macos-dotnet.yml)
-f
+
 English | [Português](README.pt-PT.md)
 
 # CrossFire Emulator (C# Version)
