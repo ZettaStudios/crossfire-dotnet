@@ -1,4 +1,5 @@
-﻿using Login.Enum;
+﻿using System.Text;
+using Login.Enum;
 using Shared.Network;
 using Shared.Util;
 using Shared.Util.Log.Factories;
@@ -21,11 +22,16 @@ namespace Login.Network.packet
         // not finished
         public override void Encode()
         {
-            byte[] tmp = new byte[8096];
-            tmp[1] = 32;
-            tmp[2] = 3;
-            tmp[4] = 25;
-            tmp[8] = 2;
+            buffer = new byte[809];
+            /* header */
+            buffer[0] = StartsWith;
+            Write((ushort)buffer.Length - 9, 1);
+            buffer[4] = 19;
+            buffer[10] = 2;
+            
+            buffer[409] = 1;
+            buffer[^1] = EndsWith;
+
             LogFactory.GetLog("LoginResponsePacket").LogInfo($"\n{NetworkUtil.DumpPacket(buffer)}");
         }
     }

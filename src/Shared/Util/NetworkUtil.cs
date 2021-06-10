@@ -53,15 +53,41 @@ namespace Shared.Util {
                 if (t < 16)
                     for (var a = t; a < 16; a++)
                         DataStr += "   ";
-                DataStr += "     ;";
+                DataStr += "   ; ";
 
                 for (var a = 0; a < t; a++) DataStr += Convert.ToChar(packet[i * 16 + a]);
                 DataStr += Environment.NewLine;
             }
-
-            DataStr.Replace(Convert.ToChar(0), '.');
-
-            return DataStr.ToUpper();
+            // 4 - dps do nome pra dai ter o id do user
+            return DataStr.Replace(Convert.ToChar(0), '.').ToUpper();
         }
+
+        public static List<IncorrectByte> ComparePacket(byte[] packet, string target)
+        {
+            string[] packetPieces = BytesToString(packet).Split(" ");
+            string[] targetPieces = target.Split(" ");
+            List<IncorrectByte> diff = new List<IncorrectByte>();
+            for (int i = 0; i < targetPieces.Length; i++)
+            {
+                if (!packetPieces[i].ToLower().Equals(targetPieces[i]))
+                {
+                    diff.Add(new IncorrectByte { pos = i, original = targetPieces[i], result = packetPieces[i] });
+                }
+            }
+
+            return diff;
+        }
+
+        public static List<IncorrectByte> ComparePacket(byte[] packet, byte[] target)
+        {
+            return ComparePacket(packet, BytesToString(target));
+        }
+    }
+
+    public class IncorrectByte
+    {
+        public int pos;
+        public string original;
+        public string result;
     }
 }

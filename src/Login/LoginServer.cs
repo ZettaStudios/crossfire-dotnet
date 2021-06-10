@@ -1,7 +1,6 @@
 ﻿using System.Net.Sockets;
 using Login.Network;
 using Login.Session;
-using Login.Task;
 using Shared;
 using Shared.Enum;
 
@@ -26,7 +25,7 @@ namespace Login {
             }
             else
             {
-                client.Close();
+                client.Client.Shutdown(SocketShutdown.Both);
             }
             base.OnRun(client);
         }

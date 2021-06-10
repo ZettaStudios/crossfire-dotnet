@@ -16,8 +16,7 @@
       <Compile Include="Util\Log\Interfaces\ISingleton.cs" />
       <Compile Include="Util\Log\Logger.cs" />
       <Compile Include="Util\NetworkUtil.cs" />
-      <Compile Include="Util\TestUser.cs" />
-      <Compile Include="Util\UnicodeFormatter.cs" />
+      <Compile Include="Util\Internet.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -28,6 +27,11 @@
     <ItemGroup>
       <None Remove="util\log\enums\**" />
       <None Remove="util\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="BCrypt.Net-Next" Version="4.0.2" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     </ItemGroup>
 
 </Project>

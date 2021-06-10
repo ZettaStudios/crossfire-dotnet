@@ -67,5 +67,13 @@ namespace Shared.Scheduler
         {
             _queue.Remove(id);
         }
+
+        public void CallAfter(Action callback, int milliseconds)
+        {
+            System.Threading.Tasks.Task.Delay(milliseconds).ContinueWith(t =>
+            {
+                callback();
+            });
+        }
     }
 }

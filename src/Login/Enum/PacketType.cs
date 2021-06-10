@@ -7,7 +7,7 @@
         C2SLogin,
         C2SGoBackForServers,
         C2SCreateAccount,
-        C2SCheckNameExsitance,
+        C2SCheckNameExists,
         C2SAccountAlreadyLoggedOn,
         C2SLoginToGameServerStep1,
         C2SExit,

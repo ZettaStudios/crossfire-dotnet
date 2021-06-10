@@ -54,7 +54,7 @@ namespace Login.Network
                                     switch (buffer[5])
                                     {
                                         case 0: 
-                                            return PacketType.C2SCheckNameExsitance;
+                                            return PacketType.C2SCheckNameExists;
                                     }
                                     break;
                                 }

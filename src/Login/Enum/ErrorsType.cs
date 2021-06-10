@@ -13,6 +13,7 @@
         YouDontHaveTheLastedVersionOfCrossfire,
         YouCannotJoinTheGameFor5Minutes,
         Unknown,
-        Blocked
+        Blocked,
+        UnAvailableInYouRegion = 0x0c
     }
 }

@@ -19,8 +19,8 @@ namespace Shared.Session
         protected bool isRunning;
         protected NetworkStream NetworkStream;
 
-        protected Queue<DataPacket> _packetQueue = new Queue<DataPacket>();
-        protected int MAX_BUFFER_SIZE = 2048;
+        protected Queue<DataPacket> _packetQueue = new Queue<DataPacket>(10);
+        protected int MAX_BUFFER_SIZE = 1024 * 4;
         protected int TIMEOUT_VALUE = 120;
 
         public Session(Server server, TcpClient client)
@@ -47,10 +47,10 @@ namespace Shared.Session
             try
             {
                 LogFactory.GetLog(server.Name).LogInfo($"[CLOSED SESSION] [ID: {id}] [{client.Client.RemoteEndPoint}].");
-                client.Dispose();
+                client.Client.Shutdown(SocketShutdown.Both);
             } catch (ObjectDisposedException e) 
             {
-                LogFactory.GetLog(server.Name).LogInfo($"[CLOSED WITH EXCEPTION] [ID: {id}] [{e.Message}].");
+                LogFactory.GetLog(server.Name).LogInfo($"[CLOSED WITH EXCEPTION] [ID: {id}] [{e.Message}] [{e.StackTrace}].");
             }
             thread.Interrupt();
         }
@@ -84,7 +84,7 @@ namespace Shared.Session
 
         public void SendPacket(DataPacket packet)
         {
-            _packetQueue.Enqueue(packet);
+            if(packet != null) _packetQueue.Enqueue(packet);
         }
 
         private bool TryDequeuePacket(out DataPacket packet)
@@ -127,7 +127,7 @@ namespace Shared.Session
 
         public virtual void OnFinishPacketSent(DataPacket packet)
         {
-            
+            packet.Buffer = null;
         }
 
         protected virtual void HandlePacket(DataPacket packet)
@@ -143,20 +143,18 @@ namespace Shared.Session
                 while (true)
                 {
                     if (!client.Client.Connected) break;
-                    if (NetworkStream.CanRead)
+                    if (NetworkStream.DataAvailable)
                     {
                         TryReadPacket();
                     }
 
-                    if (NetworkStream.CanWrite)
+                    if (_packetQueue.Count > 0 && NetworkStream.CanRead)
                     {
                         TrySendPacket();
                     }
                 }
                 Close();
             } catch (IOException e) {
-                if (e.Message == null)
-                    return;
                 if ((e.HResult & 0x0000FFFF) == 5664) {
                     try {
                         Close();
@@ -167,7 +165,9 @@ namespace Shared.Session
             }
         }
 
-        protected virtual void OnRun(byte[] bytes) {}
+        protected virtual void OnRun(byte[] buffer)
+        {
+        }
         
         public SocketAddress GetAddress()
         {

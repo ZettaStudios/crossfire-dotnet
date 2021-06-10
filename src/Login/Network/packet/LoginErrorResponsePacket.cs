@@ -1,7 +1,5 @@
 ﻿using Login.Enum;
 using Shared.Network;
-using Shared.Util;
-using Shared.Util.Log.Factories;
 
 namespace Login.Network.packet
 {
@@ -23,22 +21,21 @@ namespace Login.Network.packet
         }
         public override void Encode()
         {
-            buffer = new byte[8121];
+            buffer = new byte[8213];
             buffer = Write((byte)Error, 8, buffer);
             if (Error == ErrorsType.PlayerAlreadyLoggedIn)
                 buffer = Write(Identifier, 35, buffer);
-
-            buffer[1] = 0xB0;
-            buffer[2] = 0x1F;
+            
+            Write((ushort)buffer.Length - 9, 1);
             
             buffer[3] = 0;
             buffer[4] = 1;
             buffer[5] = 0;
             
             buffer[0] = StartsWith;
-            buffer[^9] = 1;
-            buffer[^7] = 0x0B;
-            buffer[^6] = 1;
+            buffer[^20] = 1;
+            buffer[^18] = 0x10;
+            buffer[^17] = 1;
             buffer[^1] = EndsWith;
         }
     }
