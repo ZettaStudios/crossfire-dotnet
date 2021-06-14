@@ -18,7 +18,7 @@ This is a project being developed by the community, and is not affiliated with a
 - **Fork our Rest API** | [Click Here](https://github.com/ZettaStudios/crossfire-api)
 - **Fork our Server**
 - **Change the Client File** | Change files to point to our server in ``version.ini``, after change the same, host the same file locally using xampp or other and change ``localinfo.dat`` to you local website.
-- **Run our Rest API** | Use the command line `npm start` and check if is running correctly.
+- **Run our Rest API** | Use the command line `npm install` before complete, use `npm start` and check if is running correctly.
 - **Run Login Server**
 - **Try to enter In Game.**
 
