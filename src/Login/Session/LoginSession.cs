@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using Login.Enum;
-using Login.Model;
 using Login.Network.packet;
 using Login.Task;
 using Newtonsoft.Json;
@@ -65,6 +64,14 @@ namespace Login.Session
                     LoginRequestDataPacket loginRequestDataPacket = (LoginRequestDataPacket) packet;
                     Validate(loginRequestDataPacket);
                     break;
+                case LoginExitRequestPacket.NetworkId:
+                    SendPacket(packet);
+                    break;
+                case LoginToGameServerRequestStep1Packet.NetworkId:
+                    LoginToGameServerRequestStep1Packet response = (LoginToGameServerRequestStep1Packet) packet;
+                    response.User = _user;
+                    SendPacket(response);
+                    break;
             }
             base.HandlePacket(packet);
         }
@@ -83,6 +90,7 @@ namespace Login.Session
                     {
                         Authenticate(ErrorsType.NoError, packet);
                         _user = data.User;
+                        _user.Identifier = id;
                     }
                     else if(validPassword)
                     {
@@ -128,6 +136,9 @@ namespace Login.Session
                         response = new LoginErrorResponsePacket { Error = ErrorsType.CouldNotConnectToTheServer };
                     });
                     SendPacket(response);
+                    break;
+                case (short) PacketType.C2SExit:
+                    Close();
                     break;
             }
             _kickTask.Inactive = 0;

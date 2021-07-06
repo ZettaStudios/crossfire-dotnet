@@ -1,0 +1,67 @@
+namespace Game.Enum
+{
+    public enum PacketType : short
+    {
+        
+        Unknown,
+        #region Client To Server
+        C2SRequestExit,
+        C2SAuthToChannelServer,
+        C2SServerTime,
+        C2SConfirmBack,
+        C2SAutoJoin,
+        C2SAutoJoinOptions,
+        C2SChangeSettings,
+        C2SExitGameInfoInto,
+        C2SGetChannels,
+        C2SChannelJoin,
+        C2SGetPlayersOnChannel,
+        C2SExitFromChannelToChannelsList,
+        C2SChannelData,
+        C2SCreateRoom,
+        C2SJoinToRoom,
+        C2SBackFromRoom,
+        C2SGetAnotherPlayerStats,
+        C2SGetPlayerStats,
+        C2SGetZp,
+        С2SEnterToShootingRoom,
+        C2SFeverUpdate,
+        C2SChannelsUpdate,
+        C2SFeverInfoUpdate,
+        C2SHeartBeat,
+        C2SStorageItems,
+        C2SMileage,
+        #endregion
+
+        #region Server To Client
+        S2CExitGameInfo,
+        S2CConfirmBack,
+        S2CAutoJoin,
+        S2CPlayerData,
+        S2CServerTime,
+        S2CGameServer,
+        S2CGetPlayerStat,
+        S2CChangeSettings,
+        S2CExitGameInfoInto,
+        S2CChannelJoin,
+        S2CExitFromChannel,
+        S2CGetPlayersOnChannel,
+        S2CGetChannels,
+        S2CGetRooms,
+        S2CCreateRoom,
+        S2CJoinRoom,
+        S2CBackFromRoom,
+        S2CGetAnotherPlayerStats,
+        S2CGetZp,
+        S2CFeverUpdate,
+        S2CFeverReward,
+        S2CFeverInfoUpdate,
+        S2CUpdateWaitingList,
+        S2CAddRoomToLobby,
+        S2CHeartBeat,
+        S2CStorageItems,
+        S2CAnnounce,
+        S2CMileage,
+        #endregion
+    }
+}

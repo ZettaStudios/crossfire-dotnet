@@ -23,7 +23,6 @@ namespace Login.Network.packet
         public override void Encode()
         {
             buffer = new byte[809];
-            /* header */
             buffer[0] = StartsWith;
             Write((ushort)buffer.Length - 9, 1);
             buffer[4] = 19;
@@ -31,8 +30,6 @@ namespace Login.Network.packet
             
             buffer[409] = 1;
             buffer[^1] = EndsWith;
-
-            LogFactory.GetLog("LoginResponsePacket").LogInfo($"\n{NetworkUtil.DumpPacket(buffer)}");
         }
     }
 }

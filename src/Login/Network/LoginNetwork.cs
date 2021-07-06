@@ -12,6 +12,8 @@ namespace Login.Network
         protected sealed override void RegisterPackets()
         {
             RegisterPacket<LoginRequestDataPacket>((short) PacketType.C2SLogin);
+            RegisterPacket<LoginExitRequestPacket>((short) PacketType.C2SExit);
+            RegisterPacket<LoginToGameServerRequestStep1Packet>((short) PacketType.C2SLoginToGameServerStep1);
         }
 
         public override object GetTypeOf(byte[] buffer)

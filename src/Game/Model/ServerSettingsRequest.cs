@@ -1,13 +1,12 @@
 using Newtonsoft.Json;
-using Shared.Model;
 
-namespace Login.Model
+namespace Game.Model
 {
-    public class UserData
+    public class ServerSettingsRequest
     {
         [JsonProperty("status")] 
         public int Status;
         [JsonProperty("data")] 
-        public User User;
+        public Shared.Model.GameServer Server;
     }
 }

@@ -17,7 +17,7 @@ namespace Shared
         protected int maxConnections = 500;
         protected string token = "Zetta@123";
         protected string address = "127.0.0.1";
-        protected short port = 13008;
+        protected ushort port = 13008;
         protected Thread thread;
         protected ArrayList sessions = new ArrayList();
         protected Network.Network network;
@@ -28,10 +28,6 @@ namespace Shared
 
         public Server(string[] args)
         {
-            if (args.Length > 0)
-            {
-                port = short.Parse(args[0]);
-            }
             scheduler = new Scheduler.Scheduler(this);
             commandMap = new SimpleCommandMap();
             commandProcessor = new CommandProcessor(this, commandMap);
@@ -112,7 +108,7 @@ namespace Shared
             set => address = value;
         }
 
-        public short Port
+        public ushort Port
         {
             get => port;
             set => port = value;
@@ -141,5 +137,7 @@ namespace Shared
         }
 
         public bool IsAlive => _alive;
+
+        public int MaxConnections => maxConnections;
     }
 }

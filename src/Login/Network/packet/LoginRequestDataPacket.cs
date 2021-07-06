@@ -21,7 +21,7 @@ namespace Login.Network.packet
 
         public override void Decode()
         {
-            Username = ToString(16, 20);
+            Username = ToString(16, 13);
             Password = ToString(37, 20);
             Arguments = ToString(160, 224);
             MacAddress = ToString(buffer.Length-24, 12);
