@@ -75,5 +75,7 @@ namespace Shared.Scheduler
                 callback();
             });
         }
+
+        public Server Server => _server;
     }
 }

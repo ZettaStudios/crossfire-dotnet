@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Shared.Enum;
 
 namespace Shared.Model
 {
@@ -20,18 +21,30 @@ namespace Shared.Model
         public uint Deaths;
         [JsonProperty("level")]
         public ushort Rank;
+        [JsonProperty("exp")]
+        public uint Experience;
         [JsonProperty("gp")]
         public int GamePoints;
         [JsonProperty("zp")]
         public int ZettaPoints;
-        [JsonProperty("tutorial_done")]
+        [JsonProperty("tutorialdone")]
         public bool TutorialDone;
-        [JsonProperty("coupons_owned")] 
+        [JsonProperty("couponsowned")] 
         public int CouponsOwned;
 
         public bool Verify(string password)
         {
             return BCrypt.Net.BCrypt.Verify(password, Password);
+        }
+
+        public Grades NextRank
+        {
+            get
+            {
+                if (Rank.Equals((ushort)Grades.Marshall))
+                    return (Grades)Rank;
+                return (Grades)(Rank + 1);
+            }
         }
     }
 }

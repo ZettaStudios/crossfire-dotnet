@@ -27,7 +27,7 @@ namespace Game.Network.packet
             {
                 writer.Write((ushort)(i - 1));
                 writer.Write(channelCapacity);
-                writer.Write((ushort)10);//Current Number of Players on the Channel
+                writer.Write((ushort)10); //Current Number of Players on the Channel
                 memory.Position += 14;
             }
             memory.Position = 0;

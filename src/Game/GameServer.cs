@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using Game.Model;
 using Game.Network;
 using Game.Session;
+using Game.Task;
 using Newtonsoft.Json;
 using Shared;
 using Shared.Enum;
@@ -31,6 +32,7 @@ namespace Game {
                         type = ServerType.Game;
                         LoadedSettings = true;
                         network = new GameNetwork();
+                        RegisterDefaultSchedulers();
                     }
                     else
                     {
@@ -44,6 +46,11 @@ namespace Game {
             }
         }
 
+        public void RegisterDefaultSchedulers()
+        {
+            Scheduler.AddTask(new AnnouncementTask(scheduler), 1, true);
+        }
+        
         public override void OnRun(TcpClient client)
         {
             if (sessions.Count < maxConnections)
