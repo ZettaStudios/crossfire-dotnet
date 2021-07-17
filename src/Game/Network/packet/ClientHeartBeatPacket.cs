@@ -16,7 +16,7 @@ namespace Game.Network.packet
 
         public override void Decode()
         {
-           // LogFactory.GetLog("HeartBeat:Decoded").LogInfo($"\n{NetworkUtil.DumpPacket(buffer)}");
+           LogFactory.GetLog("HeartBeat:Decoded").LogInfo($"\n{NetworkUtil.DumpPacket(buffer)}");
         }
 
         public override void Encode()

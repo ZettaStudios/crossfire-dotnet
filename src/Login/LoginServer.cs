@@ -13,6 +13,7 @@ namespace Login {
             port = 13008;
             maxConnections = 200;
             network = new LoginNetwork();
+            base.RegisterDefaultSchedulers();
             // Scheduler.AddTask(new TestTask(Scheduler), 1, true);
         }
 

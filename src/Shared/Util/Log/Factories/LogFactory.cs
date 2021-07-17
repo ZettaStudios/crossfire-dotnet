@@ -58,22 +58,22 @@ namespace Shared.Util.Log.Factories {
             public string Name { get; }
 
             public void LogInfo(string message, params object[] args) {
-                message = string.Format(message, args);
+                if(args.Length > 0) message = string.Format(message, args);
                 CallOnWrite(this, message, LogType.Information);
             }
 
             public void LogSuccess(string message, params object[] args) {
-                message = string.Format(message, args);
+                if(args.Length > 0) message = string.Format(message, args);
                 CallOnWrite(this, message, LogType.Success);
             }
 
             public void LogWarning(string message, params object[] args) {
-                message = string.Format(message, args);
+                if(args.Length > 0) message = string.Format(message, args);
                 CallOnWrite(this, message, LogType.Warning);
             }
 
             public void LogError(string message, params object[] args) {
-                message = string.Format(message, args);
+                if(args.Length > 0) message = string.Format(message, args);
                 CallOnWrite(this, message, LogType.Error);
             }
 

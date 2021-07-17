@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Threading;
 using Shared.Command;
 using Shared.Enum;
+using Shared.Task;
 using Shared.Util.Log.Factories;
 
 namespace Shared
@@ -95,6 +96,10 @@ namespace Shared
             return $"Sessions: {sessions.Count} of {maxConnections}.";
         }
         
+        public virtual void RegisterDefaultSchedulers()
+        {
+            scheduler.AddTask(new ServerInformationToConsoleTask(scheduler), 5, true);
+        }
 
         public string Name
         {

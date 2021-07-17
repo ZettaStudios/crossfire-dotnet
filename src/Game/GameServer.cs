@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using Game.Model;
 using Game.Network;
@@ -46,9 +45,10 @@ namespace Game {
             }
         }
 
-        public void RegisterDefaultSchedulers()
+        public override void RegisterDefaultSchedulers()
         {
             Scheduler.AddTask(new AnnouncementTask(scheduler), 1, true);
+            base.RegisterDefaultSchedulers();
         }
         
         public override void OnRun(TcpClient client)

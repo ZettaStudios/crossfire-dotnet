@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Sockets;
 using Game.Network.packet;
 using Newtonsoft.Json;
@@ -95,8 +96,15 @@ namespace Game.Session
             switch (packet.Pid())
             {
                 case AuthToChannelServerPacket.NetworkId:
-                    PlayerDataPacket p = new PlayerDataPacket();
-                    SendPacket(p);
+                    Internet.Get("http://localhost:3000/", $"battle/statistics/{User.Id}", result =>
+                    {
+                        BattleData data = JsonConvert.DeserializeObject<BattleData>(result);
+                        if (data != null)
+                        {
+                            PlayerDataPacket p = new PlayerDataPacket { User = User, Statistics = data.Statistics };
+                            SendPacket(p);
+                        }
+                    }, error => {});
                     break;
             }
 

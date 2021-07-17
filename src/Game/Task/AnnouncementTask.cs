@@ -31,10 +31,6 @@ namespace Game.Task
                 {
                     _actual = 0;
                 }
-                else
-                {
-                    _actual++;
-                }
                 int count = Scheduler.Server.Sessions.Count;
                 if (count > 0)
                 {
@@ -49,6 +45,7 @@ namespace Game.Task
                     }
                     LogFactory.GetLog(Scheduler.Server.Name).LogError($"[ANNOUNCEMENT SEND] [TOTAL: {count}] [MSG:{message}]");
                 }
+                _actual++;
                 _current = 0;
             }
             else
