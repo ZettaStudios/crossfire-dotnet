@@ -41,7 +41,7 @@ namespace Login.Network.packet
             Write(User.Identifier, 106, buffer);
             buffer[^1] = EndsWith;
             
-            LogFactory.GetLog("LoginToGameServerRequest").LogWarning($"\n{NetworkUtil.DumpPacket(buffer)}");
+            // LogFactory.GetLog("LoginToGameServerRequest").LogWarning($"\n{NetworkUtil.DumpPacket(buffer)}");
         }
     }
 }

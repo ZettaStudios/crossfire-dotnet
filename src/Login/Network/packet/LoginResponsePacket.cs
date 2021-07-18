@@ -1,8 +1,5 @@
-﻿using System.Text;
-using Login.Enum;
+﻿using Login.Enum;
 using Shared.Network;
-using Shared.Util;
-using Shared.Util.Log.Factories;
 
 namespace Login.Network.packet
 {

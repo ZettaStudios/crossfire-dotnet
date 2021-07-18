@@ -14,6 +14,6 @@
         YouCannotJoinTheGameFor5Minutes,
         Unknown,
         Blocked,
-        UnAvailableInYouRegion = 0x0c
+        UnAvailableInYouRegion = 12
     }
 }

@@ -44,6 +44,11 @@ namespace Shared.Model
             return BCrypt.Net.BCrypt.Verify(password, Password);
         }
 
+        public bool IsFirstTimeJoined()
+        {
+            return !TutorialDone && Nickname.Length < 1;
+        }
+
         public Grades NextRank
         {
             get

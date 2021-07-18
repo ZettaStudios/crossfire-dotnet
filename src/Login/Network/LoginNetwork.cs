@@ -14,6 +14,8 @@ namespace Login.Network
             RegisterPacket<LoginRequestDataPacket>((short) PacketType.C2SLogin);
             RegisterPacket<LoginExitRequestPacket>((short) PacketType.C2SExit);
             RegisterPacket<LoginToGameServerRequestStep1Packet>((short) PacketType.C2SLoginToGameServerStep1);
+            RegisterPacket<CreateAccountPacket>((short) PacketType.C2SCreateAccount);
+            RegisterPacket<CheckNameExistencePacket>((short) PacketType.C2SCheckNameExists);
         }
 
         public override object GetTypeOf(byte[] buffer)

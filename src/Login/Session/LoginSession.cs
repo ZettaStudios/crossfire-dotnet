@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using Login.Enum;
+using Login.Model;
 using Login.Network.packet;
 using Login.Task;
 using Newtonsoft.Json;
@@ -71,6 +72,45 @@ namespace Login.Session
                     LoginToGameServerRequestStep1Packet response = (LoginToGameServerRequestStep1Packet) packet;
                     response.User = _user;
                     SendPacket(response);
+                    break;
+                case CreateAccountPacket.NetworkId:
+                    if (User.IsFirstTimeJoined())
+                    {
+                        CreateAccountPacket createAccountPacket = (CreateAccountPacket) packet;
+                        if (createAccountPacket.Confirmed)
+                        {
+                            Internet.Get("http://localhost:3000/", $"user/nickname/change/{User.Id}/{createAccountPacket.Nickname}", result =>
+                            {
+                                VerifyResult data = JsonConvert.DeserializeObject<VerifyResult>(result);
+                                if (data == null || !data.Result)
+                                {
+                                    SendPacket(new LoginErrorResponsePacket { Error = ErrorsType.UnknownError });   
+                                }
+                            }, error =>
+                            {
+                                SendPacket(new LoginErrorResponsePacket { Error = ErrorsType.CouldNotConnectToTheServer });
+                            });
+                        }
+                        SendPacket(createAccountPacket);
+                    }
+                    break;
+                case CheckNameExistencePacket.NetworkId:
+                    CheckNameExistencePacket p = (CheckNameExistencePacket) packet;
+                    Internet.Get("http://localhost:3000/", $"user/nickname/exists/{p.Nickname}", result =>
+                    {
+                        VerifyResult data = JsonConvert.DeserializeObject<VerifyResult>(result);
+                        if (data != null)
+                        {
+                            SendPacket(p);   
+                        }
+                        else
+                        {
+                            SendPacket(new LoginErrorResponsePacket { Error = ErrorsType.CouldNotConnectToTheServer });
+                        }
+                    }, error =>
+                    {
+                        SendPacket(new LoginErrorResponsePacket { Error = ErrorsType.CouldNotConnectToTheServer });
+                    });
                     break;
             }
             base.HandlePacket(packet);

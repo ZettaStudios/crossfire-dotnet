@@ -7,6 +7,7 @@ using Login.Enum;
 using Shared.Model;
 using Shared.Network;
 using Shared.Util;
+using Shared.Util.Log.Factories;
 
 namespace Login.Network.packet
 {
@@ -31,11 +32,17 @@ namespace Login.Network.packet
             #region Body
             MemoryStream memory = new MemoryStream();
             BinaryWriter writer = new BinaryWriter(memory);
-            memory.Position += 12;
-            
-            writer.Write(Encoding.ASCII.GetBytes(User.Nickname));
-            writer.Write(new byte[13 - User.Nickname.Length]);
-            
+            memory.Position += 8; // 12
+            writer.Write(User.IsFirstTimeJoined() ? 6 : 0);
+            if (User.IsFirstTimeJoined())
+            {
+                memory.Position += 13;
+            }
+            else
+            {
+                writer.Write(Encoding.ASCII.GetBytes(User.Nickname));
+                writer.Write(new byte[13 - User.Nickname.Length]);
+            }
             writer.Write(User.Id); // USER ID
             memory.Position -= 1;
             writer.Write(0x01); //(ushort)
@@ -85,6 +92,7 @@ namespace Login.Network.packet
             
             Footer();
             buffer[^1] = EndsWith;
+            LogFactory.GetLog("SendServerListPacket").LogWarning($"\n{NetworkUtil.DumpPacket(buffer)}");
         }
         
         private void Footer()
