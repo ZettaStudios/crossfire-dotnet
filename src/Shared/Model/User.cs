@@ -59,7 +59,7 @@ namespace Shared.Model
             }
         }
 
-        public int ExperienceNeed => RankExperience.GetExperienceFor(Rank);
+        public int ExperienceNeed => RankExperience.GetExperienceFor((ushort) NextRank);
         
         public byte Honor
         {

@@ -23,7 +23,7 @@ namespace Game.Network.packet
             buffer[0] = StartsWith;
             Write((ushort)buffer.Length - 9, 1);
             buffer[3] = 1; 
-            buffer[4] = 0x81; 
+            buffer[4] = 129; 
             buffer[5] = 0;
             Write(User.ZettaPoints, 6);
             buffer[^1] = EndsWith;

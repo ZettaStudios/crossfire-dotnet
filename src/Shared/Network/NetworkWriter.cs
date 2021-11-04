@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Shared.Network
 {
-    public class NetworkWriter 
+    public class NetworkWriter : BinaryWriter
     {
         protected byte[] buffer = new byte[2048];
 
+        public NetworkWriter()
+        {
+            OutStream = new MemoryStream();
+        }
+        
         public byte[] Buffer
         {
             get => buffer;
@@ -223,6 +229,17 @@ namespace Shared.Network
             return Encoding.ASCII.GetString(buffer, index, count)
                 .Replace(Encoding.ASCII.GetString(new byte[] {0x0}), "");
         }
+
+        public override void Close()
+        {
+            buffer[0] = DataPacket.StartsWith;
+            Write((ushort)buffer.Length - 9, 1);
+            buffer[^1] = DataPacket.EndsWith;
+            Memory.Close();
+            base.Close();
+        }
+
+        public MemoryStream Memory => (MemoryStream) OutStream;
 
         public object Clone()
         {

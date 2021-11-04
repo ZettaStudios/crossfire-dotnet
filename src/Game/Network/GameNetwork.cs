@@ -15,6 +15,8 @@ namespace Game.Network
             RegisterPacket<ClientHeartBeatPacket>((short) PacketType.C2SHeartBeat);
             RegisterPacket<ZettaPointsPacket>((short) PacketType.C2SGetZp);
             RegisterPacket<GetChannelsRequestPacket>((short) PacketType.C2SGetChannels);
+            RegisterPacket<FeverInfoUpdatePacket>((short) PacketType.C2SFeverInfoUpdate);
+            RegisterPacket<ServerTimePacket>((short) PacketType.C2SServerTime);
         }
 
         public override object GetTypeOf(byte[] buffer)

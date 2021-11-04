@@ -31,14 +31,17 @@ namespace Shared.Command
                 {
                     string label = args[0];
                     args = args[1..];
-                    if (_map.Exists(label))
+                    if (label.Length > 0)
                     {
-                        Command command = _map.GetCommand(label);
-                        command.Execute(_server, args);
-                    }
-                    else
-                    {
-                        LogFactory.GetLog(_server.Name).LogWarning($"The command {label} doesn't exists, check name and try again.");
+                        if (_map.Exists(label))
+                        {
+                            Command command = _map.GetCommand(label);
+                            command.Execute(_server, args);
+                        }
+                        else
+                        {
+                            LogFactory.GetLog(_server.Name).LogWarning($"The command {label} doesn't exists, check name and try again.");
+                        }
                     }
                 }
             }

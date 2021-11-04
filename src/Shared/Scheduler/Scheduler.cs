@@ -60,6 +60,7 @@ namespace Shared.Scheduler
             task.Delay = delay;
             task.MaxDelay = delay;
             task.Repeat = repeat;
+            task.OnRun();
             _queue.Add(task.TaskId, task);
         }
 

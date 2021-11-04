@@ -1,7 +1,5 @@
 using Login.Enum;
 using Shared.Network;
-using Shared.Util;
-using Shared.Util.Log.Factories;
 
 namespace Login.Network.packet
 {
@@ -17,7 +15,6 @@ namespace Login.Network.packet
 
         public override void Decode()
         {
-            LogFactory.GetLog("CreateAccountRequest").LogWarning($"\n{NetworkUtil.BytesToString(buffer)}");
             int i = 8;
             while (buffer[i] != 0)
             {
@@ -33,8 +30,7 @@ namespace Login.Network.packet
             buffer = new byte[13];
             Write((ushort)buffer.Length - 9, 1);
             buffer[0] = StartsWith;
-            buffer[4] = 9; // 0x19
-            // buffer[^1] = 1;
+            buffer[4] = 9;
             buffer[^1] = EndsWith;
         }
     }

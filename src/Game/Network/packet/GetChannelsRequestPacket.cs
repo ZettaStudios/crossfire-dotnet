@@ -19,25 +19,19 @@ namespace Game.Network.packet
 
         public override void Encode()
         {
-            GameServer _server = (GameServer) Server;
-            System.IO.MemoryStream memory = new System.IO.MemoryStream();
-            System.IO.BinaryWriter writer = new System.IO.BinaryWriter(memory);
-            ushort channelCapacity = (ushort) (_server.MaxConnections / _server.ChannelsCount);
-            for (ushort i = 1; i <= _server.ChannelsCount; i++)
+            GameServer server = (GameServer) Server;
+            ushort channelCapacity = (ushort) (server.MaxConnections / server.ChannelsCount);
+            for (ushort i = 1; i <= server.ChannelsCount; i++)
             {
-                writer.Write((ushort)(i - 1));
-                writer.Write(channelCapacity);
-                writer.Write((ushort)10); //Current Number of Players on the Channel
-                memory.Position += 14;
+                Write((ushort)(i - 1));
+                Write(channelCapacity);
+                Write((ushort)10); //Current Number of Players on the Channel
+                Memory.Position += 14;
             }
-            memory.Position = 0;
-            buffer = new byte[memory.Length];
-            memory.Read(buffer, 0, buffer.Length);
-            writer.Close();
-            memory.Close();
-            buffer[0] = StartsWith;
-            Write((ushort)buffer.Length - 9, 1);
-            buffer[^1] = EndsWith;
+            Memory.Position = 0;
+            buffer = new byte[Memory.Length];
+            Memory.Read(buffer, 0, buffer.Length);
+            Close();
         }
     }
 }

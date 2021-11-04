@@ -23,23 +23,19 @@ namespace Game.Network.packet
 
         public override void Encode()
         {
-            
-            System.IO.MemoryStream memory = new System.IO.MemoryStream();
-            System.IO.BinaryWriter writer = new System.IO.BinaryWriter(memory);
-            memory.Position = 8;
-            writer.Write((ushort)2);
-            writer.Write(ushort.MaxValue);
-            writer.Write((ushort)1);
-            writer.Write((short)Message.Length);
-            memory.Position--;
-            writer.Write(Message);
-            writer.Write((byte)0);
-            writer.Write((byte)0);
-            memory.Position = 0;
-            buffer = new byte[memory.Length];
-            memory.Read(buffer, 0, buffer.Length);
-            writer.Close();
-            memory.Close();
+            Memory.Position = 8;
+            Write((ushort)2);
+            Write(ushort.MaxValue);
+            Write((ushort)1);
+            Write((short)Message.Length);
+            Memory.Position--;
+            Write(Message);
+            Write((byte)0);
+            Write((byte)0);
+            Memory.Position = 0;
+            buffer = new byte[Memory.Length];
+            Memory.Read(buffer, 0, buffer.Length);
+            Close();
             buffer[0] = StartsWith;
             Write((ushort)buffer.Length - 9, 1);
             buffer[3] = 4; 

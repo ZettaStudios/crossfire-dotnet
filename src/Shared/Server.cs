@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using Shared.Command;
+using Shared.Constants;
 using Shared.Enum;
 using Shared.Task;
 using Shared.Util.Log.Factories;
@@ -26,6 +27,8 @@ namespace Shared
         protected CommandMap commandMap;
         private CommandProcessor commandProcessor;
         private bool _alive = false;
+        private int _tickRate = 12;
+        private int _currentTick = 0;
 
         public Server(string[] args)
         {
@@ -39,7 +42,7 @@ namespace Shared
             thread = new Thread(() =>
             {
                 Thread.CurrentThread.Name = name;
-                LogFactory.GetLog(name).LogInfo("Loading...");
+                LogFactory.GetLog(name).LogInfo("Loading server...");
                 try {
                     IPAddress ipAddress = IPAddress.Parse(address);
                     TcpListener server = new TcpListener(ipAddress, port);
@@ -47,9 +50,17 @@ namespace Shared
                     LogFactory.GetLog(name).LogInfo($"Listening at {ipAddress}:{port}.");
                     while (IsAlive)
                     {
-                        if (server.Pending())
+                        if (_currentTick % _tickRate == 0)
                         {
-                            server.BeginAcceptTcpClient(OnReceiveConnection, server);
+                            if (server.Pending())
+                            {
+                                server.BeginAcceptTcpClient(OnReceiveConnection, server);
+                            }
+                        }
+                        else
+                        {
+                            _currentTick++;
+                            Thread.Sleep(1000 * (1 / _tickRate));
                         }
                     }
                 } catch (IOException e) {

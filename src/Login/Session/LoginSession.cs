@@ -50,6 +50,7 @@ namespace Login.Session
                 else
                 {
                     LogFactory.GetLog(server.Name).LogWarning($"Unknown Packet with ID {(short)server.Network.GetTypeOf(buffer)}.");
+                    LogFactory.GetLog(server.Name).LogInfo($"\n{NetworkUtil.DumpPacket(buffer)}");
                 } 
                 base.OnRun(buffer);
             }catch (Exception e){

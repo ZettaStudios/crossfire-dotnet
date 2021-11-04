@@ -21,6 +21,7 @@ namespace Shared.Task
                 memory = Math.Round((double) (proc.PrivateMemorySize64 / (1024*1024)), 2);
             }
             string information = _pattern
+                .Replace("%serverName", Scheduler.Server.Name)
                 .Replace("%online", Scheduler.Server.Sessions.Count.ToString())
                 .Replace("%maxOnline", Scheduler.Server.MaxConnections.ToString())
                 .Replace("%mem", memory.ToString("0.0"))

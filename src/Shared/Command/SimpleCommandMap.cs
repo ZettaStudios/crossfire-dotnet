@@ -10,6 +10,7 @@ namespace Shared.Command
         }
         protected sealed override void RegisterCommands()
         {
+            Register<ClearCommand>("clear");
             Register<StopCommand>("stop");
             Register<InfoCommand>("info");
         }

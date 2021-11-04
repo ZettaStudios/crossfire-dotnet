@@ -14,6 +14,7 @@ namespace Game.Session
     public class GameSession : Shared.Session.Session
     {
         private User _user;
+        private FeverData _fever = new FeverData();
 
         public GameSession(Server server, TcpClient client) : base(server, client)
         {
@@ -48,6 +49,7 @@ namespace Game.Session
                 {
                     LogFactory.GetLog(server.Name)
                         .LogWarning($"Unknown Packet with ID {(short) server.Network.GetTypeOf(buffer)}.");
+                    LogFactory.GetLog(server.Name).LogInfo($"\n{NetworkUtil.DumpPacket(buffer)}");
                 }
             }
             catch (Exception e)
@@ -73,6 +75,17 @@ namespace Game.Session
                         {
                             _user = data.User;
                             _user.Identifier = id;
+                            Internet.Get("http://localhost:3000/", $"user/fever/{_user.Id}",
+                                res =>
+                                {
+                                    FeverData fData = JsonConvert.DeserializeObject<FeverData>(result);
+                                    if (fData != null) _fever = fData;
+                                }, error => { });
+                            _fever.Callback = () =>
+                            {
+                                LogFactory.GetLog(server.Name)
+                                    .LogInfo($"Fever Progress of {_user.Identifier} is {_fever.Progress}%.");
+                            };
                         }
                     }, error => {});
                     break;
@@ -85,6 +98,16 @@ namespace Game.Session
                     GetChannelsRequestPacket getChannelsRequestPacket = (GetChannelsRequestPacket) packet;
                     getChannelsRequestPacket.Server = server;
                     SendPacket(getChannelsRequestPacket);
+                    break;
+                case FeverInfoUpdatePacket.NetworkId:
+                    FeverInfoUpdatePacket ferverInfoUpdatePacket = (FeverInfoUpdatePacket) packet;
+                    ferverInfoUpdatePacket.Session = this;
+                    SendPacket(ferverInfoUpdatePacket);
+                    break;
+                case ServerTimePacket.NetworkId:
+                    ServerTimePacket serverTimePacket = (ServerTimePacket) packet;
+                    serverTimePacket.User = _user;
+                    SendPacket(serverTimePacket);
                     break;
             }
 
@@ -112,5 +135,6 @@ namespace Game.Session
         }
 
         public User User => _user;
+        public FeverData Fever => _fever;
     }
 }
